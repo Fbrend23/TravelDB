@@ -10,6 +10,7 @@
 const AuthController = () => import('#controllers/auth_controller')
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+const VisitsController = () => import('#controllers/visits_controller')
 
 router
   .group(() => {
@@ -18,3 +19,12 @@ router
     router.get('/me', [AuthController, 'me']).use(middleware.auth())
   })
   .prefix('/auth')
+
+router
+  .group(() => {
+    router.get('/', [VisitsController, 'list'])
+    router.post('/', [VisitsController, 'add'])
+    router.delete('/:country', [VisitsController, 'del'])
+  })
+  .prefix('/visits')
+  .use(middleware.auth())
