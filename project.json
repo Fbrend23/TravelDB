@@ -1,0 +1,7 @@
+{
+  "name": "TravelDB",
+  "description": "Carte monde interactive: pays visités + compte utilisateur",
+  "owner": "Fbrend23",
+  "stacks": ["adonisjs6", "mysql", "vue3", "leaflet"],
+  "environments": ["dev", "prod"]
+}
