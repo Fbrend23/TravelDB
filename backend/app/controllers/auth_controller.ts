@@ -8,13 +8,18 @@ export default class AuthController {
   public async register({ request, response, auth }: HttpContext) {
     //data fetch
     const payload = await request.validateUsing(registerValidator)
+    try {
+      //account creation
+      const user = await User.create(payload)
+      //access token
+      const token = await auth.use('api').createToken(user)
 
-    //account creation
-    const user = await User.create(payload)
-    //access token
-    const token = await auth.use('api').createToken(user)
-
-    return response.created({ message: `Merci pour votre inscription ${user.username}`, token })
+      return response.created({ message: `Merci pour votre inscription ${user.username}`, token })
+    } catch (error: any) {
+      if (error.code === 'ER_DUP_ENTRY' || error.code === '1062' || error.code === '23000') {
+        return response.conflict({ message: 'Email ou nom d’utilisateur déjà pris.' })
+      }
+    }
   }
 
   //POST auth/login
