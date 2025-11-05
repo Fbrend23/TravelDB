@@ -31,7 +31,7 @@ export default class AuthController {
     //access token
     const token = await auth.use('api').createToken(user)
 
-    return response.ok({ token })
+    return response.ok({ message: 'Connecté', token })
   }
 
   //GET auth/me
