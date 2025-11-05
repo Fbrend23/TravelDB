@@ -1,6 +1,8 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 import Visit from '#models/visit'
+import { visitValidator } from '#validators/visit'
 import { HttpContext } from '@adonisjs/core/http'
+import { DateTime } from 'luxon'
 
 export default class VisitsController {
   //GET /visits - List of country visited by user
@@ -13,18 +15,50 @@ export default class VisitsController {
 
   // POST /visits {contry: 'CHE', visited at: '2023-02-25'}
   public async add({ request, response, auth }: HttpContext) {
-    const userId = await auth.user!.id
-    const { country, visited_at } = request.only(['country', 'visited_at'])
+    const payload = await request.validateUsing(visitValidator)
 
-    if (!country || country.lenght !== 3) {
-      return response.badRequest('country doit être ISO alpha-3')
+    const userId = auth.user!.id
+    const country = payload.country.toUpperCase()
+
+    // Convert and check the date
+    const when = payload.visited_at
+      ? DateTime.fromFormat(payload.visited_at + '-01', 'yyyy-MM-dd', { zone: 'utc' })
+      : DateTime.utc().startOf('month')
+
+    if (!when.isValid) {
+      return response.badRequest({
+        message: 'visited_at doit être une date ISO valide (YYYY-MM).',
+      })
     }
 
-    const visit = await Visit.firstOrCreate(
-      { userId, countryCode: country },
-      { visitedAt: visited_at ?? (new Date() as any) }
-    )
-    return response.created({ country: visit.countryCode, visited_at: visit.visitedAt })
+    // Check if the country is already marked as visited
+    const existing = await Visit.query()
+      .where('user_id', userId)
+      .andWhere('country_code', country)
+      .first()
+
+    if (existing) {
+      return response.ok({
+        message: 'Pays déjà marqué comme visité.',
+        country: existing.countryCode,
+        visited_at: existing.visitedAt,
+        created: false,
+      })
+    }
+
+    // entry creation
+    const visit = await Visit.create({
+      userId,
+      countryCode: country,
+      visitedAt: when.toJSDate(),
+    })
+
+    return response.created({
+      message: 'Visite ajoutée avec succès.',
+      country: visit.countryCode,
+      visited_at: visit.visitedAt,
+      created: true,
+    })
   }
 
   //DELETE /visits/:country

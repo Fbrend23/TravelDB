@@ -11,7 +11,7 @@ export default class Visit extends BaseModel {
   declare countryCode: string
 
   @column()
-  declare visitedAt: Date
+  declare visitedAt: Date | null
 
   //FK
   @column()
