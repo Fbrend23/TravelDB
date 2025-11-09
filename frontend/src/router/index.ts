@@ -3,6 +3,7 @@ import DashboardPage from '../pages/DashboardPage.vue'
 import PublicMapPage from '../pages/PublicMapPage.vue'
 import LoginPage from '../pages/auth/LoginPage.vue'
 import HomePage from '@/pages/HomePage.vue'
+import { useAuthStore } from '@/stores/auth.ts'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -14,11 +15,14 @@ const router = createRouter({
   ],
 })
 
+let triedHydrate = false
 router.beforeEach(async (to) => {
   // Vérifie si la route est publique
   const isPublic = to.meta?.public === true
   //Token adonisJS
   const token = localStorage.getItem('token')
+  // pinia
+  const auth = useAuthStore()
 
   if (isPublic) {
     if (to.path === '/login' && token) {
@@ -29,7 +33,16 @@ router.beforeEach(async (to) => {
 
   if (!token) {
     const next = encodeURIComponent(to.fullPath)
-    return `/login?next${next}`
+    return `/login?next=${next}`
+  }
+
+  if (!auth.user && !triedHydrate) {
+    triedHydrate = true
+    const ok = await auth.loadMe()
+    if (!ok) {
+      const next = encodeURIComponent(to.fullPath)
+      return `/login?next=${next}`
+    }
   }
   return true
 })
