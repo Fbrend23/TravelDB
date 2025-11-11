@@ -1,6 +1,6 @@
 <template>
-    <main class="">
-        <div class="contaier">
+    <main class="container-xl">
+        <div class="mb-3">
             <h1 class="">Connexion</h1>
 
             <!-- Alerte d’erreur -->
@@ -39,7 +39,10 @@
                             Se souvenir de moi
                         </label>
                     </div>
-                    <router-link class="link-secondary" to="/login">Mot de passe oublié ?</router-link>
+                    <router-link class="link-secondary" to="/login">
+                        Mot de passe oublié ?
+                    </router-link>
+
                 </div>
 
                 <!-- Bouton -->
