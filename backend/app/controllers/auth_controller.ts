@@ -49,8 +49,9 @@ export default class AuthController {
   //GET auth/me
   public async me({ auth, response }: HttpContext) {
     // push user infos
-    const user = auth.user!
-    return response.ok({ id: user.id, email: user.email, username: user.username })
+    const user = auth.use('web').user
+
+    return response.ok({ id: user!.id, email: user!.email, username: user!.username })
   }
   // POST auth/logout
   public async logout({ auth, response }: HttpContext) {
