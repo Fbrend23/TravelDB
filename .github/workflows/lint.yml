@@ -6,7 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint_fix:
+  lint:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
 
     steps:
