@@ -55,7 +55,7 @@ export default class AuthController {
   }
   // POST auth/logout
   public async logout({ auth, response }: HttpContext) {
-    await auth.use('api').invalidateToken()
+    await auth.use('web').logout()
     return response.ok({ message: 'Déconnecté' })
   }
 }
