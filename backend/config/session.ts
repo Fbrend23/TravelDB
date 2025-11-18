@@ -4,7 +4,7 @@ import { defineConfig, stores } from '@adonisjs/session'
 
 const sessionConfig = defineConfig({
   enabled: true,
-  cookieName: 'adonis-session',
+  cookieName: 'traveldb.sid',
 
   /**
    * When set to true, the session id cookie will be deleted
@@ -27,9 +27,7 @@ const sessionConfig = defineConfig({
     httpOnly: true,
     secure: app.inProduction,
     sameSite: 'lax',
-    cookieName: 'traveldb.sid',
   },
-
   /**
    * The store to use. Make sure to validate the environment
    * variable in order to infer the store name without any
