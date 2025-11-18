@@ -1,5 +1,7 @@
 name: Prettier Auto-Fix PR
 
+permissions:
+  contents: write
 on:
   push:
     branches: [ main ]
