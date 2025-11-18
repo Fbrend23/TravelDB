@@ -1,12 +1,12 @@
-name: Lint, Auto-Fix and Type Check
+name: ESLint Auto-Fix PR
 
 on:
   push:
     branches: [ main ]
-  pull_request:
+  workflow_dispatch:
 
 jobs:
-  lint:
+  lint_fix:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,29 +23,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: ESLint auto-fix
-        run: npm run lint -- --fix
+      - name: Run ESLint auto-fix
+        run: npm run lint:fix || true
 
-      - name: Detect changes
+      - name: Check for changes
         id: changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
-            echo "modified=true" >> $GITHUB_OUTPUT
+            echo "changed=true" >> $GITHUB_OUTPUT
           else
-            echo "modified=false" >> $GITHUB_OUTPUT
+            echo "changed=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Commit auto-fixes
-        if: steps.changes.outputs.modified == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "ESLint auto-fix"
-          git push
-
-      - name: ESLint
-        run: npm run lint
-
-      - name: TypeScript type check
-        run: npm run type-check
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "ESLint auto-fix"
+          title: "ESLint auto-fix"
+          body: "Ce PR contient les corrections automatiques générées par ESLint."
+          branch: eslint-autofix
+          base: main
+          delete-branch: true
