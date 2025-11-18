@@ -2,6 +2,7 @@ name: Prettier Auto-Fix PR
 
 permissions:
   contents: write
+
 on:
   push:
     branches: [ main ]
@@ -28,7 +29,7 @@ jobs:
       - name: Run Prettier
         run: npx prettier . --write
 
-      - name: Detect changes
+      - name: Check for changes
         id: changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
@@ -41,9 +42,10 @@ jobs:
         if: steps.changes.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Prettier auto-format"
           title: "Prettier auto-format"
-          body: "Cette Pull Request contient le formatage automatique généré par Prettier."
+          body: "Formatage automatique appliqué par Prettier."
           branch: prettier-autofix
           base: main
           delete-branch: true
