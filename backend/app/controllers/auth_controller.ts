@@ -30,12 +30,20 @@ export default class AuthController {
   public async login({ request, response, auth }: HttpContext) {
     //validation of email and password
     const { email, password } = await request.validateUsing(loginValidator)
-    //verification of email and password
-    const user = await User.verifyCredentials(email, password)
-    //access token
-    const token = await auth.use('api').createToken(user)
 
-    return response.ok({ message: 'Connecté', token })
+    try {
+      //verification of email and password
+      const user = await User.verifyCredentials(email, password)
+      //create session
+      await auth.use('web').login(user)
+      return response.ok({
+        message: 'Connecté',
+      })
+    } catch {
+      return response.unauthorized({
+        message: 'Identifiants incorrects',
+      })
+    }
   }
 
   //GET auth/me
