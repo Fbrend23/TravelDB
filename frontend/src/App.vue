@@ -8,7 +8,7 @@
   </header>
 
   <main>
-    <TheWelcome />
+    <router-view />
   </main>
 </template>
 
