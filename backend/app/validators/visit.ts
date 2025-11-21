@@ -8,6 +8,6 @@ export const visitValidator = vine.compile(
       .trim()
       .regex(/^[A-Z]{3}$/)
       .transform((v) => v.toUpperCase()),
-    visited_at: vine.date({ formats: ['YYYY-MM'] }).optional(),
+    visited_at: vine.date({ formats: ['YYYY-MM', 'YYYY-MM-DD'] }).optional(),
   })
 )
