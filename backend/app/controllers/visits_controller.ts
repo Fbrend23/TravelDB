@@ -22,7 +22,7 @@ export default class VisitsController {
 
     // Convert and check the date
     const when = payload.visited_at
-      ? DateTime.fromFormat(payload.visited_at + '-01', 'yyyy-MM-dd', { zone: 'utc' })
+      ? DateTime.fromJSDate(payload.visited_at)
       : DateTime.utc().startOf('month')
 
     if (!when.isValid) {
