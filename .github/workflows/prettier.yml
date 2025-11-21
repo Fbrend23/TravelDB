@@ -27,7 +27,7 @@ jobs:
         run: npm ci
 
       - name: Run Prettier
-        run: npx prettier . --write --ignore-path .prettierignore
+        run: npx prettier . --write --ignore-path .prettierignore --ignore-path .github/workflows
 
       - name: Check for changes
         id: changes
