@@ -6,3 +6,7 @@ export function apiAddVisit(country_code: string, visited_at?: string) {
     visited_at,
   })
 }
+
+export function apiGetVisits() {
+  return api.get('/visits')
+}
