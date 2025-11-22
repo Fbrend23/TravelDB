@@ -21,12 +21,17 @@
         <!-- user connected-->
         <div v-else class="p-0 mt-4">
             <h2 class="fw-bold text-center">Bonjour {{ auth.user?.username }}</h2>
+            <div class="container-fluid py-4">
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-10">
+                        <Map />
+                    </div>
 
-            <!-- ToDo leaflet -->
-            <div class="mt-4" style="height: 80vh; width: 100%;">
-                <!-- leaflet here -->
-                <div class="bg-light h-100 w-100 d-flex justify-content-center align-items-center">
-                    <span class="text-muted">Carte en cours de chargement...</span>
+                    <!-- right column -->
+                    <div class="col-md-2">
+                        <AddVisitForm />
+                    </div>
                 </div>
             </div>
         </div>
@@ -35,12 +40,9 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
-
+import Map from '@/components/Map.vue';
+import AddVisitForm from '@/components/AddVisitForm.vue';
 const auth = useAuthStore()
 </script>
 
-<style scoped>
-h1 {
-    font-size: 2.4rem;
-}
-</style>
+<style scoped></style>
