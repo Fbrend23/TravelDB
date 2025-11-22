@@ -1,4 +1,4 @@
-import vine from '@vinejs/vine'
+import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
 export const loginValidator = vine.compile(
   vine.object({
@@ -21,3 +21,18 @@ export const registerValidator = vine.compile(
     email: vine.string().email(),
   })
 )
+
+vine.messagesProvider = new SimpleMessagesProvider({
+  'username.required': 'Le nom d’utilisateur est obligatoire.',
+  'username.minLength': 'Le nom d’utilisateur doit faire au minimum 3 caractères.',
+  'username.maxLength': 'Le nom d’utilisateur ne peut pas dépasser 32 caractères.',
+  'username.regex': 'Le nom d’utilisateur ne peut contenir que des lettres et chiffres.',
+  'username.unique': 'Ce nom d’utilisateur est déjà utilisé.',
+
+  'email.required': 'L’adresse email est obligatoire.',
+  'email.email': 'Veuillez saisir une adresse email valide.',
+
+  'password.required': 'Le mot de passe est obligatoire.',
+  'password.minLength': 'Le mot de passe doit faire au minimum 8 caractères.',
+  'password.maxLength': 'Le mot de passe ne peut pas dépasser 512 caractères.',
+})
