@@ -1,15 +1,22 @@
 <script setup lang="ts">
 
+import Nav from '@/components/Nav.vue'
+import { BApp } from 'bootstrap-vue-next'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 </script>
 
 <template>
-  <header>
+  <BApp>
 
-  </header>
+    <header>
+      <Nav />
+    </header>
 
-  <main>
-    <router-view />
-  </main>
+    <main>
+      <router-view />
+    </main>
+  </BApp>
 </template>
 
 <style scoped></style>
