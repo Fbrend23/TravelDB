@@ -1,7 +1,7 @@
-import axios from 'axios'
+import { api } from './axios'
 
 export function apiAddVisit(country_code: string, visited_at?: string) {
-  return axios.post('/visits', {
+  return api.post('/visits', {
     country: country_code,
     visited_at,
   })
