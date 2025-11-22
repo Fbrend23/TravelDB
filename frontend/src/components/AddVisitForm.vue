@@ -11,7 +11,7 @@
                     <label class="form-label">Pays</label>
 
                     <input v-model="countrySearch" type="text" class="form-control" placeholder="Ex: Suisse"
-                        @focus="showList = true" @input="filterCountries" />
+                        @focus="showList = true" @input="updateSearch" />
                     <!-- Error if empty -->
                     <small v-if="errors.country" class="text-danger text-center d-block w-100">
                         {{ errors.country }}
@@ -50,10 +50,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import countries from 'i18n-iso-countries'
 import fr from 'i18n-iso-countries/langs/fr.json'
-import { apiAddVisit } from '@/api/visits'
+import { useVisitsStore } from '@/stores/visits'
+import type { AxiosError } from 'axios'
+
+const visitsStore = useVisitsStore()
 
 countries.registerLocale(fr)
 
@@ -71,6 +74,7 @@ const errors = ref({
     country: '',
     date: '',
 })
+
 const message = ref('')
 
 /* Country list */
@@ -79,14 +83,17 @@ const countryList = Object.entries(allCountries)
     .map(([code, name]) => ({ code, name }))
     .sort((a, b) => a.name.localeCompare(b.name))
 
-const filteredCountries = ref([...countryList])
-
-function filterCountries() {
+// block country already visited
+const filteredCountries = computed(() => {
     const search = countrySearch.value.toLowerCase()
-    filteredCountries.value = countryList.filter((c) =>
-        c.name.toLowerCase().includes(search)
-    )
-}
+
+    return countryList
+        .filter((c) => c.name.toLowerCase().includes(search))
+        .filter((c) => {
+            const iso3 = countries.alpha2ToAlpha3(c.code)
+            return iso3 && !visitsStore.visits.includes(iso3)
+        })
+})
 
 /* Selection of country */
 function selectCountry(c: { code: string; name: string }) {
@@ -114,7 +121,6 @@ function validateForm() {
         ok = false
     }
 
-
     return ok
 }
 
@@ -127,24 +133,32 @@ async function submit() {
         loading.value = false
         return
     }
-    const iso3 = countries.alpha2ToAlpha3(selectedCountry.value)
 
+    const iso3 = countries.alpha2ToAlpha3(selectedCountry.value)
+    if (!iso3) {
+        errors.value.country = 'Code pays invalide'
+        loading.value = false
+        return
+    }
     try {
-        const res = await apiAddVisit(iso3, date.value || "")
-        message.value = res.data.message || 'Pays ajouté avec succès'
-    } catch (error: any) {
-        // traduction of error from vine
-        const msg = error.response?.data?.message || 'Erreur lors de l’ajout'
-        message.value = msg
+        await visitsStore.addVisit(iso3, date.value || "")
+        message.value = 'Pays ajouté avec succès'
+
+        // reset forms
+        countrySearch.value = ''
+        selectedCountry.value = ''
+        date.value = ''
+
+    } catch (error: unknown) {
+        const err = error as AxiosError<{ message?: string }>
+        message.value = err.response?.data?.message || 'Erreur lors de l’ajout'
     }
 
     loading.value = false
 }
 
-</script>
-
-<style scoped>
-.card {
-    border-radius: 10px;
+function updateSearch() {
+    showList.value = true
 }
-</style>
+
+</script>
