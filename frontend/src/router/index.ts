@@ -4,11 +4,23 @@ import LoginPage from '@/pages/auth/LoginPage.vue'
 import RegisterPage from '@/pages/auth/RegisterPage.vue'
 import HomePage from '@/pages/HomePage.vue'
 import { useAuthStore } from '@/stores/auth'
+import PrivacyPage from '@/pages/PrivacyPage.vue'
+import LegalPage from '@/pages/LegalPage.vue'
 
 const routes = [
   { path: '/', component: HomePage },
   { path: '/login', component: LoginPage, meta: { guestOnly: true } },
   { path: '/register', component: RegisterPage, meta: { guestOnly: true } },
+  {
+    path: '/privacy',
+    name: 'privacy',
+    component: PrivacyPage,
+  },
+  {
+    path: '/legal',
+    name: 'legal',
+    component: LegalPage,
+  },
 ]
 
 export const router = createRouter({
