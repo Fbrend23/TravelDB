@@ -8,6 +8,7 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import L from 'leaflet'
 import { useVisitsStore } from '@/stores/visits'
+import type { Feature, Geometry } from 'geojson'
 
 const visitsStore = useVisitsStore()
 const map = ref<L.Map | null>(null)
@@ -15,8 +16,17 @@ const mapElement = ref<HTMLDivElement | null>(null)
 let geoJsonLayer: L.GeoJSON | null = null
 
 // Color visited country
-function styleCountry(feature: any) {
-    const iso = feature.id
+function styleCountry(feature?: Feature<Geometry>) {
+    if (!feature) {
+        return {
+            color: '#999',
+            weight: 1,
+            fillColor: '#d9d9d9',
+            fillOpacity: 0.4,
+        }
+    }
+
+    const iso = String(feature.id ?? '')
     const isVisited = visitsStore.visits.includes(iso)
 
     return {
@@ -55,14 +65,14 @@ onMounted(async () => {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map.value)
+    }).addTo(map.value as L.Map)
 
     // load geojson data
     const geojson = await fetch('/countries.geo.json').then(r => r.json())
 
     geoJsonLayer = L.geoJSON(geojson, {
         style: styleCountry,
-    }).addTo(map.value)
+    }).addTo(map.value as L.Map)
 
     // change color when data refresh
     watch(
