@@ -20,12 +20,14 @@ export interface RegisterPayload extends LoginPayload {
 type AuthState = {
   user: User | null
   isLoggedIn: boolean
+  isLoggingOut: boolean
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     user: null,
     isLoggedIn: false,
+    isLoggingOut: false,
   }),
 
   getters: {
@@ -38,6 +40,11 @@ export const useAuthStore = defineStore('auth', {
      * Returns the current user
      */
     getUser: (state) => state.user,
+
+    /**
+     * Returns if user is trying to log out
+     */
+    getIsLoggingOut: (state) => state.isLoggingOut,
   },
 
   actions: {
@@ -54,7 +61,6 @@ export const useAuthStore = defineStore('auth', {
       try {
         await apiLogin(payload.email, payload.password)
         await this.fetchUser()
-        this.isLoggedIn = true
         return true
       } catch (error: unknown) {
         throw error as AxiosError
@@ -84,13 +90,21 @@ export const useAuthStore = defineStore('auth', {
      * @returns true on success
      */
     async logout() {
+      this.user = null
+      this.isLoggedIn = false
+      this.isLoggingOut = true
       try {
         await apiLogout()
-        this.user = null
-        this.isLoggedIn = false
         return true
       } catch (error: unknown) {
         throw error as AxiosError
+      } finally {
+        //timer to be sure the user is being disconnected
+        setTimeout(() => {
+          this.isLoggingOut = false
+        }, 1000)
+
+        return true
       }
     },
 
@@ -101,6 +115,14 @@ export const useAuthStore = defineStore('auth', {
      * @returns true if a user is logged in, false otherwise
      */
     async fetchUser() {
+      if (this.isLoggingOut) {
+        this.user = null
+        this.isLoggedIn = false
+        return false
+      }
+      //Prevent refresh if user is already connected
+      if (this.user && this.isLoggedIn) return true
+
       try {
         const res = await apiMe()
         this.user = res.data
