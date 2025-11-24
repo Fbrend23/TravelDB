@@ -54,8 +54,11 @@ export default class AuthController {
     return response.ok({ id: user!.id, email: user!.email, username: user!.username })
   }
   // POST auth/logout
-  public async logout({ auth, response }: HttpContext) {
+  public async logout({ auth, response, session }: HttpContext) {
     await auth.use('web').logout()
+    session.clear()
+    response.clearCookie('traveldb')
+
     return response.ok({ message: 'Déconnecté' })
   }
 }
