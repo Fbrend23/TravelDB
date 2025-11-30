@@ -2,14 +2,28 @@
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import ThemeToggle from './ThemeButton.vue';
+import { useThemeStore } from '@/stores/theme';
+import { computed } from 'vue';
 
 const auth = useAuthStore()
+const themeStore = useThemeStore();
 const router = useRouter()
+const logoPathLight = '/assets/logo/logo-light-mode.png';
+const logoPathDark = '/assets/logo/logo-dark-mode.png';
 
 async function logout() {
     await auth.logout()
     router.push('/')
 }
+
+const currentLogoSrc = computed(() => {
+    // dark theme
+    if (themeStore.currentTheme === 'dark') {
+        return logoPathDark;
+    }
+    // light theme
+    return logoPathLight;
+});
 </script>
 
 <template>
@@ -18,7 +32,7 @@ async function logout() {
 
             <!-- Logo -->
             <RouterLink to="/" class="navbar-brand fw-bold fs-4">
-                TravelDB
+                <img :src="currentLogoSrc" alt="TravelDB" height="52" />
             </RouterLink>
 
             <!-- if not connected -->
