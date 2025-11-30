@@ -1,10 +1,10 @@
 <template>
-    <footer class="footer mt-auto py-3 bg-dark text-light">
+    <footer class="footer mt-auto py-3 border-top">
         <div class="container">
             <div class="row align-items-center gy-3">
 
                 <div class="col-md-6 text-center text-md-start">
-                    <small class="text-white-50">
+                    <small class="">
                         © {{ currentYear }} — Tous droits réservés.
                     </small>
                 </div>
@@ -44,19 +44,9 @@ const githubUrl = 'https://github.com/Fbrend23/TravelDB'
 
 <style scoped>
 .footer-link {
-    color: rgba(255, 255, 255, 0.6) !important;
     text-decoration: none;
     transition: color 0.3s ease, transform 0.3s ease;
     font-size: 0.9rem;
     font-weight: 500;
-}
-
-.footer-link:hover {
-    color: #ffffff !important;
-
-}
-
-.github-icon {
-    color: rgba(255, 255, 255, 0.8) !important;
 }
 </style>

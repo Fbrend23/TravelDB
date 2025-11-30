@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid p-0 bg-light">
+    <div class="container-fluid p-0 ">
 
         <!-- guest page -->
         <div v-if="!auth.isLoggedIn" class="text-center py-5">
@@ -9,13 +9,14 @@
                 Crée un compte pour enregistrer les pays que tu as visités et afficher ta carte du monde personnalisée
             </p>
 
+            <RouterLink to="/login" class="btn btn-outline-secondary btn-lg me-2">
+                Se connecter
+            </RouterLink>
+
             <RouterLink to="/register" class="btn btn-primary btn-lg me-2">
                 S'inscrire
             </RouterLink>
 
-            <RouterLink to="/login" class="btn btn-outline-secondary btn-lg">
-                Se connecter
-            </RouterLink>
         </div>
 
         <!-- user connected-->
