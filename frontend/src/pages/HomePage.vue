@@ -19,25 +19,25 @@
         </div>
 
         <!-- user connected-->
-        <div v-else class="p-0 mt-4">
+        <div v-else class="">
             <div class="container-fluid py-4">
                 <div class="row">
 
                     <!-- Left Column -->
-                    <div class="col-md-10 d-flex">
+                    <div class="col-md-10 d-flex mt-1">
                         <div class="w-100" style="height: 80vh;">
                             <Map @show-visits="setSelectedVisits" />
                         </div>
                     </div>
 
                     <!-- right column -->
-                    <div class="col-md-2 d-flex flex-column pb-3" style="height: 80vh;">
+                    <div class="col-md-2 d-flex flex-column pt-2 pb-2" style="height: 80vh;">
                         <!-- form -->
-                        <div class="flex-shrink-0">
+                        <div class="flex-shrink-0 mt-1 pt-4">
                             <AddVisitForm />
                         </div>
                         <!-- country list-->
-                        <div class="flex-grow-1 mt-1 d-flex flex-column overflow-hidden ">
+                        <div class="flex-grow-1 mt-1 d-flex flex-column overflow-hidden pb-4">
                             <VisitList v-if="currentVisits.length" :country="currentCountryName" :visits="currentVisits"
                                 :countryISO3="currentCountryISO3" />
                         </div>
@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
-import Map from '@/components/Map.vue';
+import Map from '@/components/MapComponent.vue';
 import AddVisitForm from '@/components/AddVisitForm.vue';
 import VisitList from "@/components/VisitList.vue"
 import { useVisitsStore, type Visit } from "@/stores/visits"
