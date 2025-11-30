@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import Nav from '@/components/Nav.vue'
-import Footer from '@/components/Footer.vue'
+import Nav from '@/components/NavBar.vue'
+import Footer from '@/components/FooterComponent.vue'
 import { BApp } from 'bootstrap-vue-next'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
@@ -11,13 +11,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 <template>
   <div class="app-wrapper">
-
     <BApp>
-
       <header>
         <Nav />
       </header>
-
       <main class="main-content">
         <router-view />
       </main>
@@ -35,6 +32,5 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 .main-content {
   flex: 1;
-  /* padding-bottom: 2rem; */
 }
 </style>
