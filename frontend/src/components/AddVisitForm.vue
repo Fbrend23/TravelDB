@@ -8,7 +8,7 @@
 
                 <!-- Autocomplete -->
                 <div class="mb-3 position-relative">
-                    <label class="form-label">Pays</label>
+                    <label class="form-label">Pays <span class="text-danger">*</span></label>
 
                     <input v-model="countrySearch" type="text" class="form-control" placeholder="Ex: Suisse"
                         @focus="showList = true" @input="updateSearch" />
@@ -40,6 +40,7 @@
                 <p v-if="message" class="text-success text-center d-block w-100">
                     {{ message }}
                 </p>
+                <p class="text-muted small mb-2"> * obligatoire</p>
                 <button class="btn btn-primary w-100" :disabled="loading">
                     <span v-if="loading">Ajout...</span>
                     <span v-else>Ajouter</span>
