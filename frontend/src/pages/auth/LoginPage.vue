@@ -1,5 +1,5 @@
 <template>
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="container d-flex justify-content-center align-items-center my-5">
         <div class="col-12 col-md-6 col-lg-4">
             <h2 class="text-center mb-4">Connexion</h2>
 

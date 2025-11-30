@@ -92,7 +92,7 @@ const filteredCountries = computed(() => {
         .filter((c) => c.name.toLowerCase().includes(search))
         .filter((c) => {
             const iso3 = countries.alpha2ToAlpha3(c.code)
-            return iso3 && !visitsStore.visits.includes(iso3)
+            return iso3 && !visitsStore.visits.some(v => v.country === iso3)
         })
 })
 

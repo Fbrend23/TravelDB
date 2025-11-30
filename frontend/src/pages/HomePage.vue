@@ -1,21 +1,23 @@
 <template>
-    <div class="container-fluid p-0 bg-light">
+    <div class="container-fluid p-0 ">
 
         <!-- guest page -->
         <div v-if="!auth.isLoggedIn" class="text-center py-5">
-            <h1 class="fw-bold mb-3">Bienvenue sur TravelDB</h1>
+            <h1 class="fw-bold mb-3">Explorez vos voyages - Visualisez votre monde</h1>
 
             <p class="text-muted mb-4">
-                Crée un compte pour enregistrer les pays que tu as visités et afficher ta carte du monde personnalisée
+                TravelDB vous permet d’enregistrer vos pays visités, suivre vos statistiques et découvrir votre
+                progression sur une carte interactive
             </p>
+
+            <RouterLink to="/login" class="btn btn-outline-secondary btn-lg me-2">
+                Se connecter
+            </RouterLink>
 
             <RouterLink to="/register" class="btn btn-primary btn-lg me-2">
                 S'inscrire
             </RouterLink>
 
-            <RouterLink to="/login" class="btn btn-outline-secondary btn-lg">
-                Se connecter
-            </RouterLink>
         </div>
 
         <!-- user connected-->
