@@ -2,8 +2,13 @@
   <div class="card mt-3 h-100 d-flex flex-column">
 
     <!-- fixed header -->
-    <div class="card-header fw-bold fs-5 bg-white border-bottom">
+    <div class="card-header fw-bold fs-5 border-bottom">
       {{ country }}
+    </div>
+    <!-- no country selected -->
+    <div v-if="!props.country" class="p-3 text-center text-muted">
+      <i class="bi bi-globe fs-3 d-block mb-2"></i>
+      Cliquez sur un pays pour afficher vos visites
     </div>
 
     <!-- scrollable content -->

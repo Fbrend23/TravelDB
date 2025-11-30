@@ -38,7 +38,7 @@
                         </div>
                         <!-- country list-->
                         <div class="flex-grow-1 mt-1 d-flex flex-column overflow-hidden pb-4">
-                            <VisitList v-if="currentVisits.length" :country="currentCountryName" :visits="currentVisits"
+                            <VisitList :country="currentCountryName" :visits="currentVisits"
                                 :countryISO3="currentCountryISO3" />
                         </div>
                     </div>
