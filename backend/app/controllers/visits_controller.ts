@@ -27,26 +27,24 @@ export default class VisitsController {
 
     if (!when.isValid) {
       return response.badRequest({
-        message: 'visited_at doit être une date ISO valide (YYYY-MM).',
+        message: 'visited_at doit être une date valide.',
       })
     }
 
-    // Check if the country is already marked as visited
-    const existing = await Visit.query()
+    // block same visits at same date
+    const sameDate = await Visit.query()
       .where('user_id', userId)
       .andWhere('country_code', country)
+      .andWhere('visited_at', when.toJSDate())
       .first()
 
-    if (existing) {
-      return response.ok({
-        message: 'Pays déjà marqué comme visité.',
-        country: existing.countryCode,
-        visited_at: existing.visitedAt,
-        created: false,
+    if (sameDate) {
+      return response.badRequest({
+        message: 'Ce pays a déjà été visité à cette date.',
       })
     }
 
-    // entry creation
+    // ✔ Création
     const visit = await Visit.create({
       userId,
       countryCode: country,
@@ -55,12 +53,12 @@ export default class VisitsController {
 
     return response.created({
       message: 'Visite ajoutée avec succès.',
+      id: visit.id,
       country: visit.countryCode,
       visited_at: visit.visitedAt,
       created: true,
     })
   }
-
   //DELETE /visits/:country
   public async del({ params, response, auth }: HttpContext) {
     const userId = auth.user!.id
