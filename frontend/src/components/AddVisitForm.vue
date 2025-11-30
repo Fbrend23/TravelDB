@@ -84,16 +84,12 @@ const countryList = Object.entries(allCountries)
     .map(([code, name]) => ({ code, name }))
     .sort((a, b) => a.name.localeCompare(b.name))
 
-// block country already visited
+// filter countries
 const filteredCountries = computed(() => {
     const search = countrySearch.value.toLowerCase()
 
     return countryList
         .filter((c) => c.name.toLowerCase().includes(search))
-        .filter((c) => {
-            const iso3 = countries.alpha2ToAlpha3(c.code)
-            return iso3 && !visitsStore.visits.some(v => v.country === iso3)
-        })
 })
 
 /* Selection of country */
