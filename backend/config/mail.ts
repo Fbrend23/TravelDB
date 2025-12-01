@@ -9,7 +9,10 @@ const mailConfig = defineConfig({
    * each using a different transport or same transport with different
    * options.
    */
-
+  from: {
+    address: env.get('SMTP_USERNAME'),
+    name: 'TravelDB',
+  },
   mailers: {
     smtp: transports.smtp({
       host: env.get('SMTP_HOST'),

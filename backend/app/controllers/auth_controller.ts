@@ -1,12 +1,15 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import { loginValidator, registerValidator } from '#validators/auth'
-import { HttpContext, Route } from '@adonisjs/core/http'
+import { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
+import mail from '@adonisjs/mail/services/main'
+import router from '@adonisjs/core/services/router'
+import env from '#start/env'
 
 export default class AuthController {
   //post auth/register
-  public async register({ request, response, auth }: HttpContext) {
+  public async register({ request, response }: HttpContext) {
     //data fetch
     const payload = await request.validateUsing(registerValidator)
     try {
@@ -14,7 +17,14 @@ export default class AuthController {
       const user = await User.create(payload)
 
       // generate signed url
-      const verifyUrl = Route.makeSignedUrl('verifyEmail', { id: user.id }, { expiresIn: '30m' })
+      const verifyUrl = router.makeSignedUrl(
+        'verifyEmail',
+        { id: user.id },
+        {
+          expiresIn: '30m',
+          prefixUrl: env.get('APP_URL'),
+        }
+      )
 
       // send mail
       await mail.send((message) => {
@@ -33,6 +43,11 @@ export default class AuthController {
           message: 'Email ou nom d’utilisateur déjà pris.',
         })
       }
+
+      console.error("Erreur inattendue lors de l'inscription:", error)
+      return response.internalServerError({
+        message: 'Une erreur interne est survenue',
+      })
     }
   }
 
@@ -40,10 +55,21 @@ export default class AuthController {
   public async login({ request, response, auth }: HttpContext) {
     //validation of email and password
     const { email, password } = await request.validateUsing(loginValidator)
+    //verification of email and password
+    const user = await User.verifyCredentials(email, password)
+
+    if (!user) {
+      return response.unauthorized({ message: 'Identifiants invalides' })
+    }
+
+    if (!user.isVerified) {
+      return response.forbidden({
+        message: 'Veuillez vérifier votre adresse e-mail avant de vous connecter.',
+        code: 'EMAIL_NOT_VERIFIED',
+      })
+    }
 
     try {
-      //verification of email and password
-      const user = await User.verifyCredentials(email, password)
       //create session
       await auth.use('web').login(user)
       return response.ok({
@@ -60,7 +86,9 @@ export default class AuthController {
   public async me({ auth, response }: HttpContext) {
     // push user infos
     const user = auth.use('web').user
-
+    if (!user) {
+      return response.unauthorized()
+    }
     return response.ok({ id: user!.id, email: user!.email, username: user!.username })
   }
   // POST auth/logout
@@ -72,23 +100,27 @@ export default class AuthController {
     return response.ok({ message: 'Déconnecté' })
   }
   public async verifyEmail({ request, response, params }: HttpContext) {
+    const frontendUrl = env.get('WEB_URL')
+
     // Verify if url is valide
     if (!request.hasValidSignature()) {
-      return response.badRequest({ message: 'Lien de vérification invalide ou expiré.' })
+      return response.redirect(`${frontendUrl}/login?message=invalid_link&variant=danger`)
     }
 
     // find user
     const user = await User.find(params.id)
     if (!user) {
-      return response.notFound({ message: 'Utilisateur non trouvé.' })
+      return response.redirect(`${frontendUrl}/login?message=user_not_found&variant=danger`)
     }
 
     // check if not already verified
     if (user.isVerified) {
+      return response.redirect(`${frontendUrl}/login?message=already_verified&variant=info`)
     }
 
     // user is verified
     user.emailVerifiedAt = DateTime.now()
     await user.save()
+    return response.redirect(`${frontendUrl}/login?message=verified_success&variant=success`)
   }
 }
