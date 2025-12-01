@@ -18,6 +18,7 @@ router
     router.post('/login', [AuthController, 'login'])
     router.post('/logout', [AuthController, 'logout']).use(middleware.auth())
     router.get('/me', [AuthController, 'me']).use(middleware.auth())
+    router.get('/verify-email/:id', [AuthController, 'verifyEmail']).as('verifyEmail')
   })
   .prefix('/auth')
 
