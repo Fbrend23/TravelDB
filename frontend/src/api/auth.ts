@@ -34,3 +34,20 @@ export function apiMe() {
 export function apiRegister(payload: { email: string; username: string; password: string }) {
   return api.post('/auth/register', payload)
 }
+
+/**
+ * GET /verify-email/:id
+ * verify user's email
+ */
+export async function apiVerifyEmail(id: string, queryParams: Record<string, string>) {
+  const response = await api.get(`/auth/verify-email/${id}`, {
+    params: queryParams,
+  })
+  return response
+}
+/**
+ * GET/resend-verification
+ */
+export function apiResendVerification(email: string) {
+  return api.post('/auth/resend-verification', { email })
+}
