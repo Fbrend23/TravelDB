@@ -143,13 +143,26 @@ async function submit() {
 async function handleResendEmail() {
     resendLoading.value = true
     errorMessage.value = null
+    resendSuccessMessage.value = null
 
     try {
         await auth.resendVerificationEmail(email.value)
         resendSuccessMessage.value = "Un nouvel e-mail a été envoyé ! Vérifiez votre boîte de réception."
         showResendButton.value = false
-    } catch (error) {
-        errorMessage.value = "Impossible de renvoyer l'e-mail. Réessayez plus tard."
+    } catch (error: unknown) {
+        const err = error as AxiosError
+        const data = err.response?.data as { message?: string, errors?: { message: string }[] }
+
+        // Rate Limiting (429)
+        if (err.response?.status === 429) {
+            errorMessage.value = "Trop de tentatives. Veuillez patienter une minute avant de réessayer."
+        }
+        else if (data?.message) {
+            errorMessage.value = translate(data.message)
+        }
+        else {
+            errorMessage.value = "Impossible de renvoyer l'e-mail. Réessayez plus tard."
+        }
         showResendButton.value = true
     } finally {
         resendLoading.value = false
