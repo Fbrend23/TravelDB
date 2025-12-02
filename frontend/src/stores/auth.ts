@@ -1,6 +1,13 @@
 import { defineStore } from 'pinia'
 import type { AxiosError } from 'axios'
-import { apiLogin, apiLogout, apiRegister, apiMe } from '@/api/auth'
+import {
+  apiLogin,
+  apiLogout,
+  apiRegister,
+  apiMe,
+  apiVerifyEmail,
+  apiResendVerification,
+} from '@/api/auth'
 
 export interface User {
   id: number
@@ -132,6 +139,23 @@ export const useAuthStore = defineStore('auth', {
         this.user = null
         this.isLoggedIn = false
         return false
+      }
+    },
+    async verifyEmail(id: string, queryParams: Record<string, string>) {
+      try {
+        await apiVerifyEmail(id, queryParams)
+        return true
+      } catch (error: unknown) {
+        throw error as AxiosError
+      }
+    },
+
+    async resendVerificationEmail(email: string) {
+      try {
+        await apiResendVerification(email)
+        return true
+      } catch (error: unknown) {
+        throw error as AxiosError
       }
     },
   },

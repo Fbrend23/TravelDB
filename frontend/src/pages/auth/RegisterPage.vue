@@ -92,14 +92,7 @@ async function submit() {
             email: email.value,
             password: password.value,
         })
-
-        // auto login
-        await auth.login({
-            email: email.value,
-            password: password.value,
-        })
-
-        router.push('/')
+        router.push({ path: '/login', query: { message: 'verification_sent', variant: 'success' } })
     } catch (error: unknown) {
         const err = error as AxiosError
 
