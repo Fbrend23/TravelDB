@@ -10,18 +10,20 @@
 const AuthController = () => import('#controllers/auth_controller')
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+import { throttle, throttleResend } from './limiter.js'
 const VisitsController = () => import('#controllers/visits_controller')
 
 router
   .group(() => {
-    router.post('/register', [AuthController, 'register'])
-    router.post('/login', [AuthController, 'login'])
+    router.post('/register', [AuthController, 'register']).use(throttle)
+    router.post('/login', [AuthController, 'login']).use(throttle)
     router.post('/logout', [AuthController, 'logout']).use(middleware.auth())
     router.get('/me', [AuthController, 'me']).use(middleware.auth())
     router.get('/verify-email/:id', [AuthController, 'verifyEmail']).as('verifyEmail')
     router
       .post('/resend-verification', [AuthController, 'resendVerification'])
       .as('resendVerification')
+      .use(throttleResend)
   })
   .prefix('/auth')
 
