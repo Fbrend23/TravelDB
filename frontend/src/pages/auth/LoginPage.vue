@@ -17,10 +17,24 @@
                 </div>
 
                 <!-- Backend errors -->
-                <p v-if="errorMessage" class="text-danger mb-3">
+                <div v-if="urlMessage" :class="`alert alert-${urlVariant} mb-3`" role="alert">
+                    {{ urlMessage }}
+                </div>
+                <div v-if="errorMessage" class="alert alert-danger mb-3">
                     {{ errorMessage }}
-                </p>
+                    <!-- Mail resend button -->
+                    <div v-if="showResendButton" class="mt-2 pt-2 border-top border-danger-subtle">
+                        <button type="button" class="btn btn-sm btn-outline-danger w-100" @click="handleResendEmail"
+                            :disabled="resendLoading">
+                            <span v-if="resendLoading" class="spinner-border spinner-border-sm me-1"></span>
+                            Renvoyer l'email de vérification
+                        </button>
+                    </div>
+                </div>
 
+                <div v-if="resendSuccessMessage" class="alert alert-success mb-3">
+                    {{ resendSuccessMessage }}
+                </div>
                 <!-- Submit -->
                 <button class="btn btn-primary w-100" :disabled="loading">
                     <span v-if="loading">Connexion...</span>
@@ -37,35 +51,69 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import type { AxiosError } from 'axios'
 
 const auth = useAuthStore()
 const router = useRouter()
+const route = useRoute()
 
 const email = ref('')
 const password = ref('')
-const errorMessage = ref<string | null>(null)
 const loading = ref(false)
 
-// Traduction ultra simple des erreurs du validator
+const errorMessage = ref<string | null>(null)
+const urlMessage = ref<string | null>(null)
+const urlVariant = ref('info') // 'success', 'danger', 'info'
+
+const showResendButton = ref(false)
+const resendLoading = ref(false)
+const resendSuccessMessage = ref<string | null>(null)
+
+onMounted(() => {
+    const msg = route.query.message as string
+    const variant = route.query.variant as string
+    if (msg) {
+
+        if (msg === 'verification_sent') {
+            urlMessage.value = "Inscription réussie ! Un e-mail de vérification vous a été envoyé."
+            urlVariant.value = 'success'
+        } else if (msg === 'verified_success') {
+            urlMessage.value = "Votre compte a été vérifié avec succès ! Vous pouvez vous connecter."
+            urlVariant.value = 'success'
+        } else if (msg === 'already_verified') {
+            urlMessage.value = "Votre compte est déjà vérifié."
+            urlVariant.value = 'info'
+        } else if (msg === 'invalid_link') {
+            urlMessage.value = "Le lien de vérification est invalide ou a expiré."
+            urlVariant.value = 'danger'
+        } else if (msg === 'user_not_found') {
+            urlMessage.value = "Utilisateur introuvable."
+            urlVariant.value = 'danger'
+        } else {
+            urlMessage.value = msg
+            urlVariant.value = variant || 'info'
+        }
+    }
+})
+
 function translate(msg: string): string {
     if (msg.includes('credentials') || msg.includes('Invalid')) {
         return 'Email ou mot de passe incorrect'
     }
-    if (msg.includes('email')) {
-        return 'Veuillez saisir une adresse email valide'
+    if (msg.includes('vérifier votre adresse')) {
+        return 'Votre adresse email n\'a pas encore été vérifiée.'
     }
     return msg
 }
 
-/**
- * Submit login form
- */
 async function submit() {
     errorMessage.value = null
+    urlMessage.value = null
+    resendSuccessMessage.value = null
+    showResendButton.value = false
     loading.value = true
 
     try {
@@ -73,16 +121,17 @@ async function submit() {
             email: email.value,
             password: password.value,
         })
-
         router.push('/')
     } catch (error: unknown) {
         const err = error as AxiosError
-        const data = err.response?.data as { message?: string, errors?: { message: string }[] }
+        const data = err.response?.data as { message?: string, code?: string }
 
-        if (data?.errors) {
-            errorMessage.value = data.errors.map((e) => translate(e.message)).join(', ')
-        } else if (data?.message) {
+        if (data?.message) {
             errorMessage.value = translate(data.message)
+
+            if (err.response?.status === 403 || data.code === 'EMAIL_NOT_VERIFIED') {
+                showResendButton.value = true
+            }
         } else {
             errorMessage.value = 'Une erreur est survenue'
         }
@@ -90,6 +139,20 @@ async function submit() {
         loading.value = false
     }
 }
-</script>
 
-<style scoped></style>
+async function handleResendEmail() {
+    resendLoading.value = true
+    errorMessage.value = null
+
+    try {
+        await auth.resendVerificationEmail(email.value)
+        resendSuccessMessage.value = "Un nouvel e-mail a été envoyé ! Vérifiez votre boîte de réception."
+        showResendButton.value = false
+    } catch (error) {
+        errorMessage.value = "Impossible de renvoyer l'e-mail. Réessayez plus tard."
+        showResendButton.value = true
+    } finally {
+        resendLoading.value = false
+    }
+}
+</script>
