@@ -123,4 +123,35 @@ export default class AuthController {
     await user.save()
     return response.redirect(`${frontendUrl}/login?message=verified_success&variant=success`)
   }
+
+  public async resendVerification({ request, response }: HttpContext) {
+    const email = request.input('email')
+    const user = await User.findBy('email', email)
+
+    if (!user) {
+      return response.notFound({ message: 'Aucun compte associé à cet email.' })
+    }
+
+    if (user.isVerified) {
+      return response.badRequest({ message: 'Ce compte est déjà vérifié.' })
+    }
+
+    const verifyUrl = router.makeSignedUrl(
+      'verifyEmail',
+      { id: user.id },
+      {
+        expiresIn: '30m',
+        prefixUrl: env.get('APP_URL'),
+      }
+    )
+
+    await mail.send((message) => {
+      message
+        .to(user.email)
+        .subject('Nouveau lien de vérification')
+        .htmlView('emails/verify_email', { url: verifyUrl })
+    })
+
+    return response.ok({ message: 'Un nouvel e-mail de vérification a été envoyé.' })
+  }
 }
