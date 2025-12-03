@@ -46,6 +46,10 @@
                 Pas encore de compte ?
                 <router-link to="/register">Créer un compte</router-link>
             </p>
+            <p class="text-center mt-3">
+                Mot de passe oublié ?
+                <router-link to="/forgot-password">Réinitialiser le mot de passe</router-link>
+            </p>
         </div>
     </div>
 </template>
