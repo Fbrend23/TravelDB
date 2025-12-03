@@ -5,6 +5,7 @@ import { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import mail from '@adonisjs/mail/services/main'
 import router from '@adonisjs/core/services/router'
+import string from '@adonisjs/core/helpers/string'
 import env from '#start/env'
 
 export default class AuthController {
@@ -153,5 +154,58 @@ export default class AuthController {
     })
 
     return response.ok({ message: 'Un nouvel e-mail de vérification a été envoyé.' })
+  }
+
+  //password change request
+  public async forgotPassword({ request, response }: HttpContext) {
+    const email = request.input('email')
+    const user = await User.findBy('email', email)
+
+    if (!user) {
+      return response.ok({ message: 'Si cet email existe, un lien a été envoyé.' })
+    }
+    //create a token with expiration date
+    const token = string.random(64)
+    user.resetToken = token
+
+    user.resetTokenExpiresAt = DateTime.now().plus({ hours: 1 })
+    await user.save()
+
+    // link to frontend
+    const frontendUrl = env.get('WEB_URL')
+    const resetLink = `${frontendUrl}/reset-password?token=${token}&email=${email}`
+
+    await mail.send((message) => {
+      message
+        .to(user.email)
+        .subject('Réinitialisation de votre mot de passe')
+        .htmlView('emails/reset_password', { url: resetLink, username: user.username })
+    })
+
+    return response.ok({ message: 'Si cet email existe, un lien a été envoyé.' })
+  }
+
+  // reset of password
+  public async resetPassword({ request, response }: HttpContext) {
+    const { token, email, password } = request.all()
+
+    // compare user with token
+    const user = await User.query()
+      .where('email', email)
+      .where('reset_token', token)
+      .where('reset_token_expires_at', '>', DateTime.now().toSQL())
+      .first()
+
+    if (!user) {
+      return response.badRequest({ message: 'Ce lien est invalide ou a expiré.' })
+    }
+
+    user.password = password
+    // clean token
+    user.resetToken = null
+    user.resetTokenExpiresAt = null
+    await user.save()
+
+    return response.ok({ message: 'Mot de passe modifié avec succès.' })
   }
 }
