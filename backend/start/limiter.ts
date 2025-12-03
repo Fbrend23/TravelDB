@@ -19,5 +19,5 @@ export const throttleResend = limiter.define('resend_verification', (ctx) => {
   const email = ctx.request.input('email')
   const key = email ? `resend_${email}` : `resend_${ctx.request.ip()}`
 
-  return limiter.allowRequests(1).every('1 minute').usingKey(key)
+  return limiter.allowRequests(5).every('1 minute').usingKey(key)
 })
