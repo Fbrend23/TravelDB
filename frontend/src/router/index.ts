@@ -6,11 +6,15 @@ import HomePage from '@/pages/HomePage.vue'
 import { useAuthStore } from '@/stores/auth'
 import PrivacyPage from '@/pages/PrivacyPage.vue'
 import LegalPage from '@/pages/LegalPage.vue'
+import ForgotPassword from '@/pages/auth/ForgotPassword.vue'
+import ResetPassword from '@/pages/auth/ResetPassword.vue'
 
 const routes = [
   { path: '/', component: HomePage },
   { path: '/login', component: LoginPage, meta: { guestOnly: true } },
   { path: '/register', component: RegisterPage, meta: { guestOnly: true } },
+  { path: '/forgot-password', component: ForgotPassword, meta: { guestOnly: true } },
+  { path: '/reset-password', component: ResetPassword, meta: { guestOnly: true } },
   {
     path: '/privacy',
     name: 'privacy',

@@ -39,6 +39,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
     return this.emailVerifiedAt !== null
   }
 
+  @column()
+  declare resetToken: string | null
+
+  @column.dateTime()
+  declare resetTokenExpiresAt: DateTime | null
+
   @hasMany(() => Visit)
   declare visits: HasMany<typeof Visit>
 

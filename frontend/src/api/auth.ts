@@ -51,3 +51,17 @@ export async function apiVerifyEmail(id: string, queryParams: Record<string, str
 export function apiResendVerification(email: string) {
   return api.post('/auth/resend-verification', { email })
 }
+
+export function apiForgotPassword(email: string) {
+  return api.post('/auth/forgot-password', { email })
+}
+
+export function apiResetPassword(payload: { token: string; password: string; email: string }) {
+  return api.post('/auth/reset-password', payload)
+}
+
+export function apiVerifyResetToken(email: string, token: string) {
+  return api.get('/auth/verify-reset-token', {
+    params: { email, token },
+  })
+}
