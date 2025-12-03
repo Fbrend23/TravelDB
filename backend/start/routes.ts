@@ -26,6 +26,7 @@ router
       .use(throttleResend)
     router.post('/forgot-password', [AuthController, 'forgotPassword']).use(throttleResend)
     router.post('/reset-password', [AuthController, 'resetPassword']).use(throttleResend)
+    router.get('/verify-reset-token', [AuthController, 'verifyResetToken']).use(throttleResend)
   })
   .prefix('/auth')
 

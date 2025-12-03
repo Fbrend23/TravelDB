@@ -199,13 +199,34 @@ export default class AuthController {
     if (!user) {
       return response.badRequest({ message: 'Ce lien est invalide ou a expiré.' })
     }
+    try {
+      user.password = password
+      // clean token
+      user.resetToken = null
+      user.resetTokenExpiresAt = null
+      await user.save()
+      return response.ok({ message: 'Mot de passe modifié avec succès.' })
+    } catch (error) {
+      return response.badRequest({ message: 'Erreur lors de la modification du mot de passe.' })
+    }
+  }
+  public async verifyResetToken({ request, response }: HttpContext) {
+    const { email, token } = request.qs()
 
-    user.password = password
-    // clean token
-    user.resetToken = null
-    user.resetTokenExpiresAt = null
-    await user.save()
+    if (!email || !token) {
+      return response.badRequest({ message: 'Lien invalide (paramètres manquants).' })
+    }
 
-    return response.ok({ message: 'Mot de passe modifié avec succès.' })
+    const user = await User.query()
+      .where('email', email)
+      .where('reset_token', token)
+      .where('reset_token_expires_at', '>', DateTime.now().toSQL())
+      .first()
+
+    if (!user) {
+      return response.notFound({ message: 'Ce lien de réinitialisation est invalide ou a expiré.' })
+    }
+
+    return response.ok({ message: 'Token valide.' })
   }
 }
