@@ -23,7 +23,7 @@
           </div>
           <!-- Edit -->
           <div class="btn-group btn-group-sm">
-            <button class="btn btn-outline-secondary" title="Modifier">
+            <button class="btn btn-outline-secondary" @click="handleEdit(v)" title="Modifier">
               <i class="bi bi-pencil"></i>
             </button>
             <!-- Delete -->
@@ -50,7 +50,9 @@ const props = defineProps<{
   country: string
   visits: Visit[]
 }>()
-
+const emit = defineEmits<{
+  (e: 'edit', visit: Visit): void
+}>()
 function formatFullDate(dateString?: string) {
   if (!dateString) return '—'
 
@@ -74,6 +76,10 @@ async function handleDelete(id: number) {
   if (confirm('Voulez-vous vraiment supprimer cette visite ?')) {
     await visitStore.deleteVisit(id)
   }
+}
+
+function handleEdit(visit: Visit) {
+  emit('edit', visit)
 }
 </script>
 

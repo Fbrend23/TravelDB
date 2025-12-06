@@ -35,6 +35,7 @@ router
     router.get('/', [VisitsController, 'list'])
     router.post('/', [VisitsController, 'add'])
     router.delete('/:id', [VisitsController, 'del'])
+    router.put('/:id', [VisitsController, 'update'])
   })
   .prefix('/visits')
   .use(middleware.auth())
