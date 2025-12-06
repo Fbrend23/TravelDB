@@ -56,33 +56,23 @@ export default class AuthController {
   public async login({ request, response, auth }: HttpContext) {
     //validation of email and password
     const { email, password } = await request.validateUsing(loginValidator)
-    //verification of email and password
-    const user = await User.verifyCredentials(email, password)
-
-    if (!user) {
-      return response.unauthorized({ message: 'Identifiants invalides' })
-    }
-
-    if (!user.isVerified) {
-      return response.forbidden({
-        message: 'Veuillez vérifier votre adresse e-mail avant de vous connecter.',
-        code: 'EMAIL_NOT_VERIFIED',
-      })
-    }
-
     try {
+      const user = await User.verifyCredentials(email, password)
+
+      //verification of email and password
+      if (!user.isVerified) {
+        return response.forbidden({
+          message: 'Veuillez vérifier votre adresse e-mail avant de vous connecter.',
+          code: 'EMAIL_NOT_VERIFIED',
+        })
+      }
       //create session
       await auth.use('web').login(user)
-      return response.ok({
-        message: 'Connecté',
-      })
-    } catch {
-      return response.unauthorized({
-        message: 'Identifiants incorrects',
-      })
+      return response.ok({ message: 'Connecté' })
+    } catch (error) {
+      return response.unauthorized({ message: 'Identifiants invalides' })
     }
   }
-
   //GET auth/me
   public async me({ auth, response }: HttpContext) {
     // push user infos
