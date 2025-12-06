@@ -16,3 +16,11 @@ export function apiGetVisits() {
 export function apiDeleteVisit(id: number) {
   return api.delete(`/visits/${id}`)
 }
+
+//update a visit
+export function apiUpdateVisit(id: number, country_code: string, visited_at?: string) {
+  return api.put(`/visits/${id}`, {
+    country: country_code,
+    visited_at,
+  })
+}

@@ -36,12 +36,12 @@
                     <div class="col-md-2 d-flex flex-column pt-2 pb-2" style="height: 80vh;">
                         <!-- form -->
                         <div class="flex-shrink-0 mt-1 pt-4">
-                            <AddVisitForm />
+                            <AddVisitForm :visitToEdit="visitToEdit" @cancel-edit="cancelEdit"
+                                @success="onFormSuccess" />
                         </div>
                         <!-- country list-->
                         <div class="flex-grow-1 mt-1 d-flex flex-column overflow-hidden pb-4">
-                            <VisitList :country="currentCountryName" :visits="currentVisits"
-                                :countryISO3="currentCountryISO3" />
+                            <VisitList :country="currentCountryName" :visits="currentVisits" @edit="setVisitToEdit" />
                         </div>
                     </div>
                 </div>
@@ -64,12 +64,27 @@ const currentCountryName = ref<string>('')
 const currentCountryISO3 = ref<string>('')
 const currentVisits = ref<Visit[]>([])
 const visitsStore = useVisitsStore()
+const visitToEdit = ref<Visit | null>(null)
 
 function setSelectedVisits(payload: { countryName: string; countryISO3: string; visits: Visit[] }) {
     currentCountryName.value = payload.countryName
     currentCountryISO3.value = payload.countryISO3
     currentVisits.value = payload.visits
+    cancelEdit()
 }
+
+function setVisitToEdit(visit: Visit) {
+    visitToEdit.value = visit
+}
+
+function cancelEdit() {
+    visitToEdit.value = null
+}
+
+function onFormSuccess() {
+    visitToEdit.value = null
+}
+
 watch(
     () => visitsStore.visits,
     (newVisits) => {

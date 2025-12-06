@@ -10,7 +10,7 @@ export default class VisitsController {
     const userId = await auth.user!.id
     const visits = await Visit.query().where('user_id', userId).orderBy('country_code', 'asc')
 
-    return visits.map((v) => ({ country: v.countryCode, visited_at: v.visitedAt }))
+    return visits.map((v) => ({ id: v.id, country: v.countryCode, visited_at: v.visitedAt }))
   }
 
   // POST /visits {contry: 'CHE', visited at: '2023-02-25'}
@@ -44,7 +44,6 @@ export default class VisitsController {
       })
     }
 
-    // ✔ Création
     const visit = await Visit.create({
       userId,
       countryCode: country,
@@ -59,16 +58,65 @@ export default class VisitsController {
       created: true,
     })
   }
-  //DELETE /visits/:country
+  //DELETE /visits/:id
   public async del({ params, response, auth }: HttpContext) {
     const userId = auth.user!.id
-    const country = String(params.country || '').toUpperCase()
-    const row = await Visit.query().where({ userId, countryCode: country }).first()
+    const visitId = params.id
+    const visit = await Visit.query().where('id', visitId).where('user_id', userId).first()
 
-    if (!row) return response.notFound()
+    if (!visit) {
+      return response.notFound({ message: 'Visite introuvable ou non autorisée.' })
+    }
 
-    await row.delete()
+    await visit.delete()
+    return response.ok({ message: 'Visite supprimée' })
+  }
 
-    return { ok: true }
+  // PUT /visits/:id
+  public async update({ params, request, response, auth }: HttpContext) {
+    const payload = await request.validateUsing(visitValidator)
+
+    const userId = auth.user!.id
+    const visitId = params.id
+    const country = payload.country.toUpperCase()
+
+    const visit = await Visit.query().where('id', visitId).where('user_id', userId).first()
+
+    if (!visit) {
+      return response.notFound({ message: 'Visite introuvable ou non autorisée.' })
+    }
+
+    const when = payload.visited_at
+      ? DateTime.fromJSDate(payload.visited_at)
+      : DateTime.utc().startOf('month')
+
+    if (!when.isValid) {
+      return response.badRequest({ message: 'Date invalide.' })
+    }
+
+    const duplicate = await Visit.query()
+      .where('user_id', userId)
+      .andWhere('country_code', country)
+      .andWhere('visited_at', when.toJSDate())
+      .andWhereNot('id', visit.id)
+      .first()
+
+    if (duplicate) {
+      return response.badRequest({
+        message: 'Une autre visite existe déjà pour ce pays à cette date.',
+      })
+    }
+
+    visit.countryCode = country
+    visit.visitedAt = when.toJSDate()
+
+    await visit.save()
+
+    return response.ok({
+      message: 'Visite modifiée avec succès.',
+      id: visit.id,
+      country: visit.countryCode,
+      visited_at: visit.visitedAt,
+    })
   }
 }

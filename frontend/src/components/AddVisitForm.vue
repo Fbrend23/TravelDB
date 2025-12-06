@@ -2,7 +2,9 @@
     <div class="card shadow-sm">
         <div class="card-body">
 
-            <h4 class="fw-bold mb-3">Ajouter un pays visité</h4>
+            <h4 class="fw-bold mb-3">
+                {{ isEditing ? 'Modifier la visite' : 'Ajouter un pays visité' }}
+            </h4>
 
             <form @submit.prevent="submit">
 
@@ -11,7 +13,7 @@
                     <label class="form-label">Pays <span class="text-danger">*</span></label>
 
                     <input v-model="countrySearch" type="text" class="form-control" placeholder="Ex: Suisse"
-                        @focus="showList = true" @input="updateSearch" />
+                        @focus="!isEditing && (showList = true)" @input="updateSearch" :disabled="isEditing" />
                     <!-- Error if empty -->
                     <small v-if="errors.country" class="text-danger text-center d-block w-100">
                         {{ errors.country }}
@@ -26,7 +28,6 @@
                         </li>
                     </ul>
                 </div>
-
                 <!-- Date -->
                 <div class="mb-3">
                     <label class="form-label">Date</label>
@@ -35,27 +36,41 @@
                     <small v-if="errors.date" class="text-danger text-center d-block w-100">
                         {{ errors.date }}
                     </small>
-                    <!-- Success message -->
                 </div>
-                <p v-if="message" class="text-success text-center d-block w-100">
+                <!-- Success message -->
+                <p v-if="message" :class="messageClass" class="text-center d-block w-100">
                     {{ message }}
                 </p>
+
                 <p class="text-muted small mb-2"> * obligatoire</p>
-                <button class="btn btn-primary w-100" :disabled="loading">
-                    <span v-if="loading">Ajout...</span>
-                    <span v-else>Ajouter</span>
-                </button>
+
+                <div class="d-flex gap-2">
+                    <button v-if="isEditing" type="button" class="btn btn-outline-secondary w-50" @click="cancelEdit">
+                        Annuler
+                    </button>
+
+                    <button class="btn btn-primary" :class="isEditing ? 'w-50' : 'w-100'" :disabled="loading">
+                        <span v-if="loading">Chargement...</span>
+                        <span v-else>{{ isEditing ? 'Modifier' : 'Ajouter' }}</span>
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import countries from 'i18n-iso-countries'
 import fr from 'i18n-iso-countries/langs/fr.json'
-import { useVisitsStore } from '@/stores/visits'
+import { useVisitsStore, type Visit } from '@/stores/visits'
 import type { AxiosError } from 'axios'
+
+const props = defineProps<{
+    visitToEdit: Visit | null
+}>()
+
+const emit = defineEmits(['cancel-edit', 'success'])
 
 const visitsStore = useVisitsStore()
 
@@ -64,19 +79,13 @@ countries.registerLocale(fr)
 /* Form state */
 const loading = ref(false)
 const date = ref('')
-
-/* Country : select + autocomplete */
 const countrySearch = ref('')
 const selectedCountry = ref('')
 const showList = ref(false)
-
-/* Errors */
-const errors = ref({
-    country: '',
-    date: '',
-})
-
 const message = ref('')
+const messageClass = ref('text-success')
+const errors = ref({ country: '', date: '' })
+const isEditing = computed(() => props.visitToEdit !== null)
 
 /* Country list */
 const allCountries = countries.getNames('fr', { select: 'official' })
@@ -87,30 +96,66 @@ const countryList = Object.entries(allCountries)
 // filter countries
 const filteredCountries = computed(() => {
     const search = countrySearch.value.toLowerCase()
-
-    return countryList
-        .filter((c) => c.name.toLowerCase().includes(search))
+    return countryList.filter((c) => c.name.toLowerCase().includes(search))
 })
 
 /* Selection of country */
+watch(() => props.visitToEdit, (newVisit) => {
+    if (newVisit) {
+
+        selectedCountry.value = countries.alpha3ToAlpha2(newVisit.country) || ''
+
+        const foundName = countryList.find(c => c.code === selectedCountry.value)?.name || ''
+        countrySearch.value = foundName || ''
+
+        if (newVisit.visited_at) {
+            date.value = new Date(newVisit.visited_at).toISOString().split('T')[0] || ''
+        } else {
+            date.value = ''
+        }
+
+        message.value = ''
+        errors.value = { country: '', date: '' }
+    }
+}, { immediate: true })
+
 function selectCountry(c: { code: string; name: string }) {
     countrySearch.value = c.name
     selectedCountry.value = c.code
     showList.value = false
 }
 
+function updateSearch() {
+    showList.value = true
+    if (countrySearch.value === '') selectedCountry.value = ''
+}
+
+function cancelEdit() {
+    resetForm()
+    emit('cancel-edit')
+}
+
+function resetForm() {
+    countrySearch.value = ''
+    selectedCountry.value = ''
+    date.value = ''
+    message.value = ''
+    errors.value = { country: '', date: '' }
+}
+
 /* Validation */
 function validateForm() {
-    errors.value = {
-        country: '',
-        date: '',
-    }
-
+    errors.value = { country: '', date: '' }
     let ok = true
 
     if (!selectedCountry.value) {
-        errors.value.country = 'Veuillez sélectionner un pays'
-        ok = false
+        const exactMatch = countryList.find(c => c.name.toLowerCase() === countrySearch.value.toLowerCase())
+        if (exactMatch) {
+            selectedCountry.value = exactMatch.code
+        } else {
+            errors.value.country = 'Veuillez sélectionner un pays dans la liste'
+            ok = false
+        }
     }
 
     if (date.value && new Date(date.value) > new Date()) {
@@ -137,25 +182,31 @@ async function submit() {
         loading.value = false
         return
     }
-    try {
-        await visitsStore.addVisit(iso3, date.value || "")
-        message.value = 'Pays ajouté avec succès'
 
-        // reset forms
-        countrySearch.value = ''
-        selectedCountry.value = ''
-        date.value = ''
+    try {
+        if (isEditing.value && props.visitToEdit) {
+            await visitsStore.updateVisit(props.visitToEdit.id, iso3, date.value || undefined)
+            message.value = 'Visite modifiée avec succès'
+            messageClass.value = 'text-success'
+
+            setTimeout(() => {
+                emit('success')
+                resetForm()
+            }, 1000)
+
+        } else {
+            await visitsStore.addVisit(iso3, date.value || undefined)
+            message.value = 'Pays ajouté avec succès'
+            messageClass.value = 'text-success'
+            resetForm()
+        }
 
     } catch (error: unknown) {
         const err = error as AxiosError<{ message?: string }>
-        message.value = err.response?.data?.message || 'Erreur lors de l’ajout'
+        message.value = err.response?.data?.message || 'Une erreur est survenue'
+        messageClass.value = 'text-danger'
+    } finally {
+        loading.value = false
     }
-
-    loading.value = false
 }
-
-function updateSearch() {
-    showList.value = true
-}
-
 </script>

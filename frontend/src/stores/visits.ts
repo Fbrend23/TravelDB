@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { apiGetVisits, apiAddVisit, apiDeleteVisit } from '@/api/visits'
+import { apiGetVisits, apiAddVisit, apiDeleteVisit, apiUpdateVisit } from '@/api/visits'
 
 type VisitApiResponse = {
   id: number
@@ -55,12 +55,21 @@ export const useVisitsStore = defineStore('visits', () => {
       throw err
     }
   }
-
+  // update a visit
+  async function updateVisit(id: number, country_iso3: string, date?: string) {
+    try {
+      await apiUpdateVisit(id, country_iso3, date)
+      await loadVisits()
+    } catch (err) {
+      throw err
+    }
+  }
   return {
     visits,
     loading,
     loadVisits,
     addVisit,
     deleteVisit,
+    updateVisit,
   }
 })
