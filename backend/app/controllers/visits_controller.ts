@@ -10,7 +10,7 @@ export default class VisitsController {
     const userId = await auth.user!.id
     const visits = await Visit.query().where('user_id', userId).orderBy('country_code', 'asc')
 
-    return visits.map((v) => ({ country: v.countryCode, visited_at: v.visitedAt }))
+    return visits.map((v) => ({ id: v.id, country: v.countryCode, visited_at: v.visitedAt }))
   }
 
   // POST /visits {contry: 'CHE', visited at: '2023-02-25'}
@@ -44,7 +44,6 @@ export default class VisitsController {
       })
     }
 
-    // ✔ Création
     const visit = await Visit.create({
       userId,
       countryCode: country,
@@ -59,16 +58,17 @@ export default class VisitsController {
       created: true,
     })
   }
-  //DELETE /visits/:country
+  //DELETE /visits/:id
   public async del({ params, response, auth }: HttpContext) {
     const userId = auth.user!.id
-    const country = String(params.country || '').toUpperCase()
-    const row = await Visit.query().where({ userId, countryCode: country }).first()
+    const visitId = params.id
+    const visit = await Visit.query().where('id', visitId).where('user_id', userId).first()
 
-    if (!row) return response.notFound()
+    if (!visit) {
+      return response.notFound({ message: 'Visite introuvable ou non autorisée.' })
+    }
 
-    await row.delete()
-
-    return { ok: true }
+    await visit.delete()
+    return response.ok({ message: 'Visite supprimée' })
   }
 }

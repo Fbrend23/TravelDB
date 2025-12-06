@@ -34,7 +34,7 @@ router
   .group(() => {
     router.get('/', [VisitsController, 'list'])
     router.post('/', [VisitsController, 'add'])
-    router.delete('/:country', [VisitsController, 'del'])
+    router.delete('/:id', [VisitsController, 'del'])
   })
   .prefix('/visits')
   .use(middleware.auth())

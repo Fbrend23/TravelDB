@@ -15,9 +15,23 @@
     <div class="flex-grow-1 overflow-auto">
       <ul class="list-group list-group-flush">
         <li v-for="v in sortedVisits" :key="v.id"
-          class="list-group-item list-group-item-action d-flex align-items-center">
-          <i class="bi bi-calendar-event me-2 text-primary"></i>
-          <span>{{ formatFullDate(v.visited_at) }}</span>
+          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+          <!-- Visit date -->
+          <div class="d-flex align-items-center">
+            <i class="bi bi-calendar-event me-2 text-primary"></i>
+            <span>{{ formatFullDate(v.visited_at) }}</span>
+          </div>
+          <!-- Edit -->
+          <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-secondary" title="Modifier">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <!-- Delete -->
+            <button class="btn btn-outline-danger" @click="handleDelete(v.id)" :disabled="visitStore.loading"
+              title="Supprimer">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
         </li>
       </ul>
     </div>
@@ -28,6 +42,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { Visit } from '@/stores/visits'
+import { useVisitsStore } from '@/stores/visits'
+
+const visitStore = useVisitsStore()
 
 const props = defineProps<{
   country: string
@@ -52,6 +69,12 @@ const sortedVisits = computed<Visit[]>(() =>
     return db - da
   })
 )
+
+async function handleDelete(id: number) {
+  if (confirm('Voulez-vous vraiment supprimer cette visite ?')) {
+    await visitStore.deleteVisit(id)
+  }
+}
 </script>
 
 <style scoped></style>
