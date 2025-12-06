@@ -1,0 +1,105 @@
+name: Deploy Production
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  # ------------------------------------------------------------------
+  # JOB 1 : FRONTEND (Vue.js) FTP
+  # ------------------------------------------------------------------
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Build Frontend
+        working-directory: ./frontend
+
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy Frontend via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+
+          local-dir: ./frontend/dist/
+          server-dir: /
+          protocol: ftp
+          exclude: |
+            **/.git*
+            **/.git*/**
+
+  # ------------------------------------------------------------------
+  # JOB 2 : BACKEND (AdonisJS) SSH
+  # ------------------------------------------------------------------
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Build Backend
+        working-directory: ./backend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Archive Production Artifact
+        run: |
+          tar -czf backend-build.tar.gz -C backend/build .
+
+      - name: Copy build via SCP
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "backend-build.tar.gz"
+          target: "/srv/customer/temp_deploy/"
+
+      - name: Remote Install & Restart
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            # --- CONFIGURATION ---
+            TARGET_DIR="/srv/customer/sites/${{secrets.SSH_PATH}}"
+            TEMP_DIR="/srv/customer/temp_deploy/"
+            
+            echo "Début du déploiement Backend"
+
+            mkdir -p $TARGET_DIR
+
+            # --strip-components=0
+            tar -xzf $TEMP_DIR/backend-build.tar.gz -C $TARGET_DIR/
+
+            cd $TARGET_DIR
+            npm ci --production
+
+            mkdir -p tmp
+            touch tmp/restart.txt
+
+            rm $TEMP_DIR/backend-build.tar.gz
+
+            echo "Backend déployé et redémarré "
