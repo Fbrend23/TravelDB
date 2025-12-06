@@ -14,6 +14,9 @@
                 <div class="mb-3">
                     <label class="form-label">Mot de passe</label>
                     <input v-model="password" type="password" class="form-control" required />
+                    <p class="text-center mt-3">
+                        <router-link to="/forgot-password">Mot de passe oublié ?</router-link>
+                    </p>
                 </div>
 
                 <!-- Backend errors -->
@@ -45,10 +48,6 @@
             <p class="text-center mt-3">
                 Pas encore de compte ?
                 <router-link to="/register">Créer un compte</router-link>
-            </p>
-            <p class="text-center mt-3">
-                Mot de passe oublié ?
-                <router-link to="/forgot-password">Réinitialiser le mot de passe</router-link>
             </p>
         </div>
     </div>
