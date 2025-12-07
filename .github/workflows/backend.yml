@@ -28,10 +28,7 @@ jobs:
         ports:
           - 3306:3306
         options: >
-          --health-cmd "mysqladmin ping -uroot -proot --silent"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          options: >- --health-cmd="mysqladmin ping -uroot -proot --silent" --health-interval=10s --health-timeout=5s --health-retries=5
 
     env:
       NODE_ENV: test
@@ -39,7 +36,7 @@ jobs:
       HOST: 127.0.0.1
       LOG_LEVEL: info
       APP_KEY: "base64:MockerKeyForCIOnly========================"
-      
+
       DB_HOST: 127.0.0.1
       DB_PORT: 3306
       DB_USER: root
