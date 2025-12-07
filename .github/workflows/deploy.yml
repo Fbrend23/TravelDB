@@ -86,7 +86,7 @@ jobs:
             # --- CONFIGURATION ---
             TARGET_DIR="/srv/customer/sites/${{secrets.SSH_PATH}}"
             TEMP_DIR="/srv/customer/temp_deploy/"
-            
+
             echo "Début du déploiement Backend"
 
             mkdir -p $TARGET_DIR

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import Nav from '@/components/NavBar.vue'
 import Footer from '@/components/FooterComponent.vue'
 import { BApp } from 'bootstrap-vue-next'

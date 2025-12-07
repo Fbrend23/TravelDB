@@ -1,14 +1,17 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import "bootstrap/scss/bootstrap";
-@import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
+@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 
-$font-family-sans-serif: 'Inter', system-ui, -apple-system, sans-serif;
+$font-family-sans-serif:
+  'Inter',
+  system-ui,
+  -apple-system,
+  sans-serif;
 $primary: #6366f1;
 $link-color: $primary;
-[data-bs-theme="dark"] {
-    --bs-body-bg: #0f172a;
-    --bs-secondary-bg: #1e293b;
-    --bs-body-color: #cbd5e1;
-    --bs-border-color: #334155;
+[data-bs-theme='dark'] {
+  --bs-body-bg: #0f172a;
+  --bs-secondary-bg: #1e293b;
+  --bs-body-color: #cbd5e1;
+  --bs-border-color: #334155;
 }

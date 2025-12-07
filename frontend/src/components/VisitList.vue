@@ -1,6 +1,5 @@
 <template>
   <div class="card mt-3 h-100 d-flex flex-column">
-
     <!-- fixed header -->
     <div class="card-header fw-bold fs-5 border-bottom">
       {{ country }}
@@ -14,8 +13,11 @@
     <!-- scrollable content -->
     <div class="flex-grow-1 overflow-auto">
       <ul class="list-group list-group-flush">
-        <li v-for="v in sortedVisits" :key="v.id"
-          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <li
+          v-for="v in sortedVisits"
+          :key="v.id"
+          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+        >
           <!-- Visit date -->
           <div class="d-flex align-items-center">
             <i class="bi bi-calendar-event me-2 text-primary"></i>
@@ -27,15 +29,18 @@
               <i class="bi bi-pencil"></i>
             </button>
             <!-- Delete -->
-            <button class="btn btn-outline-danger" @click="handleDelete(v.id)" :disabled="visitStore.loading"
-              title="Supprimer">
+            <button
+              class="btn btn-outline-danger"
+              @click="handleDelete(v.id)"
+              :disabled="visitStore.loading"
+              title="Supprimer"
+            >
               <i class="bi bi-trash"></i>
             </button>
           </div>
         </li>
       </ul>
     </div>
-
   </div>
 </template>
 
@@ -69,7 +74,7 @@ const sortedVisits = computed<Visit[]>(() =>
     const da = new Date(a.visited_at ?? '').getTime()
     const db = new Date(b.visited_at ?? '').getTime()
     return db - da
-  })
+  }),
 )
 
 async function handleDelete(id: number) {

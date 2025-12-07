@@ -7,7 +7,7 @@
           <label class="form-label">Votre email</label>
           <input v-model="email" type="email" class="form-control" required />
         </div>
-        
+
         <div v-if="message" class="alert alert-success">{{ message }}</div>
 
         <button class="btn btn-primary w-100" :disabled="loading">
@@ -35,9 +35,9 @@ async function submit() {
   message.value = ''
   try {
     await apiForgotPassword(email.value)
-    message.value = "Si cet email existe, un lien a été envoyé."
+    message.value = 'Si cet email existe, un lien a été envoyé.'
   } catch (e) {
-    message.value = "Une erreur est survenue."
+    message.value = 'Une erreur est survenue.'
   } finally {
     loading.value = false
   }

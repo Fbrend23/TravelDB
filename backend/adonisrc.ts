@@ -25,7 +25,11 @@ export default defineConfig({
   | will be scanned automatically from the "./commands" directory.
   |
   */
-  commands: [() => import('@adonisjs/core/commands'), () => import('@adonisjs/lucid/commands'), () => import('@adonisjs/mail/commands')],
+  commands: [
+    () => import('@adonisjs/core/commands'),
+    () => import('@adonisjs/lucid/commands'),
+    () => import('@adonisjs/mail/commands'),
+  ],
 
   /*
   |--------------------------------------------------------------------------
@@ -50,7 +54,7 @@ export default defineConfig({
     () => import('@adonisjs/session/session_provider'),
     () => import('@adonisjs/mail/mail_provider'),
     () => import('@adonisjs/core/providers/edge_provider'),
-    () => import('@adonisjs/limiter/limiter_provider')
+    () => import('@adonisjs/limiter/limiter_provider'),
   ],
 
   /*
@@ -87,8 +91,10 @@ export default defineConfig({
     ],
     forceExit: false,
   },
-  metaFiles: [{
-    pattern: 'resources/views/**/*.edge',
-    reloadServer: false,
-  }]
+  metaFiles: [
+    {
+      pattern: 'resources/views/**/*.edge',
+      reloadServer: false,
+    },
+  ],
 })
