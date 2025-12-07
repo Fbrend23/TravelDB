@@ -1,4 +1,6 @@
 name: Backend CI
+permissions:
+  contents: read
 
 on:
   push:
@@ -63,5 +65,5 @@ jobs:
       - name: Fix SWC Linux binary
         run: npm install @swc/core-linux-x64-gnu --no-save
 
-      - name: Build
+      - name: Run Build
         run: npm run build
