@@ -71,6 +71,9 @@ jobs:
             sleep 2
           done
 
+      - name: Rebuild SWC
+        run: npm rebuild @swc/core
+        
       - name: Run Migrations
         run: node ace migration:run --force
 
