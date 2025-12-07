@@ -4,14 +4,14 @@
         <div v-if="!auth.isLoggedIn"
             class="hero-section h-100 position-relative d-flex align-items-center justify-content-center text-white">
             <video autoplay muted loop playsinline class="bg-video">
-                <source src="../assets/travel.mp4" type="video/mp4">
+                <source src="/assets/travel.mp4" type="video/mp4">
                 Votre navigateur ne supporte pas la vidéo.
             </video>
             <div class="overlay"></div>
             <div class="content position-relative text-center p-5 rounded-4 shadow-lg bg-paper text-body-travel"
                 style="max-width: 700px; transform: rotate(-1deg);">
-                <div class="visa position-absolute top-0 end-0 p-3 opacity-75">
-                    <div class="visa border border-4 rounded-circle d-flex align-items-center justify-content-center"
+                <div class="visa position-absolute p-3 opacity-75 marker">
+                    <div class="visa border border-4 rounded-circle d-flex align-items-center justify-content-center "
                         style="width: 80px; height: 80px; transform: rotate(15deg);">
                         <span class="fw-bold font-handwritten visa">✓</span>
                     </div>
@@ -147,5 +147,10 @@ watch(
     object-fit: cover;
 
     z-index: 0;
+}
+
+.marker {
+    top: -10px;
+    right: -10px;
 }
 </style>
