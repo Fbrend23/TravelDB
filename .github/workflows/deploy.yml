@@ -70,40 +70,42 @@ jobs:
       - name: Install SSHPass
         run: sudo apt-get update && sudo apt-get install -y sshpass
 
-      - name: Copy build via SCP (Password)
+      - name: Copy build via SCP
+        env:
+            SSHPASS: ${{ secrets.SSH_PASSWORD }}
+            SSH_HOST: ${{ secrets.SSH_HOST }}
+            SSH_PORT: ${{ secrets.SSH_PORT }}
+            SSH_USER: ${{ secrets.SSH_USER }}
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p $SSH_PORT $SSH_HOST >> ~/.ssh/known_hosts
 
           echo "Nettoyage..."
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p /srv/customer/temp_deploy/ && rm -rf /srv/customer/temp_deploy/*"
+          sshpass -e ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "mkdir -p /srv/customer/temp_deploy/ && rm -rf /srv/customer/temp_deploy/*"
 
           echo "Envoi..."
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -P ${{ secrets.SSH_PORT }} backend-build.tar.gz ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/customer/temp_deploy/
-
-      - name: Copy build via SCP
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p /srv/customer/temp_deploy/ && rm -rf /srv/customer/temp_deploy/*"
-
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -P ${{ secrets.SSH_PORT }} backend-build.tar.gz ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/customer/temp_deploy/
+          sshpass -e scp -P $SSH_PORT backend-build.tar.gz $SSH_USER@$SSH_HOST:/srv/customer/temp_deploy/
 
       - name: Remote Install & Restart
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PATH: ${{ secrets.SSH_PATH }}
         run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
-            TARGET_DIR="/srv/customer/sites/${{ secrets.SSH_PATH }}"
-            TEMP_DIR="/srv/customer/temp_deploy"
+          sshpass -e ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "
+            TARGET_DIR=/srv/customer/sites/$SSH_PATH
+            TEMP_DIR=/srv/customer/temp_deploy
             
-            mkdir -p $TARGET_DIR
-            tar -xzf $TEMP_DIR/backend-build.tar.gz -C $TARGET_DIR/
+            mkdir -p \$TARGET_DIR
+            tar -xzf \$TEMP_DIR/backend-build.tar.gz -C \$TARGET_DIR/
 
-            cd $TARGET_DIR
+            cd \$TARGET_DIR
             npm ci --production
 
             mkdir -p tmp
             touch tmp/restart.txt
 
-            rm $TEMP_DIR/backend-build.tar.gz
-          '
+            rm \$TEMP_DIR/backend-build.tar.gz
+          "
