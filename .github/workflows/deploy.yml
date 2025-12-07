@@ -59,6 +59,7 @@ jobs:
         working-directory: ./backend
         run: |
           npm ci
+          npm install @swc/core-linux-x64-gnu --no-save
           npm run build
 
       - name: Archive Production Artifact
