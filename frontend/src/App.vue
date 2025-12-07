@@ -27,10 +27,14 @@ themeStore.initTheme()
 .app-wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .main-content {
   flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 </style>

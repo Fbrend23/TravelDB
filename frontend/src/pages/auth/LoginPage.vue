@@ -1,54 +1,56 @@
 <template>
-    <div class="container d-flex justify-content-center align-items-center my-5">
+    <div class="container-fluid bg-surface d-flex justify-content-center align-items-center py-5 h-100 master">
         <div class="col-12 col-md-6 col-lg-4">
-            <h2 class="text-center mb-4">Connexion</h2>
+            <div class="card shadow-sm border-0 rounded-4 p-4">
+                <h2 class="text-center mb-4 fw-bold" style="font-family: 'Montserrat', sans-serif;">Connexion</h2>
 
-            <form @submit.prevent="submit">
-                <!-- Email -->
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input v-model="email" type="text" class="form-control" required />
-                </div>
-
-                <!-- Password -->
-                <div class="mb-3">
-                    <label class="form-label">Mot de passe</label>
-                    <input v-model="password" type="password" class="form-control" required />
-                    <p class="text-center mt-3">
-                        <router-link to="/forgot-password">Mot de passe oublié ?</router-link>
-                    </p>
-                </div>
-
-                <!-- Backend errors -->
-                <div v-if="urlMessage" :class="`alert alert-${urlVariant} mb-3`" role="alert">
-                    {{ urlMessage }}
-                </div>
-                <div v-if="errorMessage" class="alert alert-danger mb-3">
-                    {{ errorMessage }}
-                    <!-- Mail resend button -->
-                    <div v-if="showResendButton" class="mt-2 pt-2 border-top border-danger-subtle">
-                        <button type="button" class="btn btn-sm btn-outline-danger w-100" @click="handleResendEmail"
-                            :disabled="resendLoading">
-                            <span v-if="resendLoading" class="spinner-border spinner-border-sm me-1"></span>
-                            Renvoyer l'email de vérification
-                        </button>
+                <form @submit.prevent="submit">
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input v-model="email" type="text" class="form-control" required />
                     </div>
-                </div>
 
-                <div v-if="resendSuccessMessage" class="alert alert-success mb-3">
-                    {{ resendSuccessMessage }}
-                </div>
-                <!-- Submit -->
-                <button class="btn btn-primary w-100" :disabled="loading">
-                    <span v-if="loading">Connexion...</span>
-                    <span v-else>Se connecter</span>
-                </button>
-            </form>
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe</label>
+                        <input v-model="password" type="password" class="form-control" required />
+                        <p class="text-center mt-3">
+                            <router-link to="/forgot-password">Mot de passe oublié ?</router-link>
+                        </p>
+                    </div>
 
-            <p class="text-center mt-3">
-                Pas encore de compte ?
-                <router-link to="/register">Créer un compte</router-link>
-            </p>
+                    <!-- Backend errors -->
+                    <div v-if="urlMessage" :class="`alert alert-${urlVariant} mb-3`" role="alert">
+                        {{ urlMessage }}
+                    </div>
+                    <div v-if="errorMessage" class="alert alert-danger mb-3">
+                        {{ errorMessage }}
+                        <!-- Mail resend button -->
+                        <div v-if="showResendButton" class="mt-2 pt-2 border-top border-danger-subtle">
+                            <button type="button" class="btn btn-sm btn-outline-danger w-100" @click="handleResendEmail"
+                                :disabled="resendLoading">
+                                <span v-if="resendLoading" class="spinner-border spinner-border-sm me-1"></span>
+                                Renvoyer l'email de vérification
+                            </button>
+                        </div>
+                    </div>
+
+                    <div v-if="resendSuccessMessage" class="alert alert-success mb-3">
+                        {{ resendSuccessMessage }}
+                    </div>
+                    <!-- Submit -->
+                    <button class="btn btn-primary w-100" :disabled="loading">
+                        <span v-if="loading">Connexion...</span>
+                        <span v-else>Se connecter</span>
+                    </button>
+                </form>
+
+                <p class="text-center mt-3">
+                    Pas encore de compte ?
+                    <router-link to="/register">Créer un compte</router-link>
+                </p>
+            </div>
         </div>
     </div>
 </template>
@@ -172,3 +174,8 @@ async function handleResendEmail() {
     }
 }
 </script>
+<style scoped>
+.master {
+    flex: 1
+}
+</style>

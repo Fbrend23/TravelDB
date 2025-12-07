@@ -1,49 +1,51 @@
 <template>
-    <div class="container d-flex justify-content-center align-items-center my-5">
+    <div class="container-fluid bg-surface d-flex justify-content-center align-items-center py-5 master">
         <div class="col-12 col-md-6 col-lg-4">
-            <h2 class="text-center mb-4">Création de compte</h2>
+            <div class="card shadow-sm border-0 rounded-4 p-4">
+                <h2 class="text-center mb-4">Création de compte</h2>
 
-            <form @submit.prevent="submit">
-                <!-- Username -->
-                <div class="mb-3">
-                    <label class="form-label">Nom du compte</label>
-                    <input v-model="username" type="text" class="form-control" required />
-                    <small class="text-muted d-block mt-1">
-                        Entre 3 et 32 caractères
-                    </small>
-                </div>
+                <form @submit.prevent="submit">
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label class="form-label">Nom du compte</label>
+                        <input v-model="username" type="text" class="form-control" required />
+                        <small class="text-muted d-block mt-1">
+                            Entre 3 et 32 caractères
+                        </small>
+                    </div>
 
-                <!-- Email -->
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input v-model="email" type="text" class="form-control" required />
-                </div>
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input v-model="email" type="text" class="form-control" required />
+                    </div>
 
-                <!-- Password -->
-                <div class="mb-3">
-                    <label class="form-label">Mot de passe</label>
-                    <input v-model="password" type="password" class="form-control" required />
-                    <small class="text-muted d-block mt-1">
-                        Minimum 8 caractères
-                    </small>
-                </div>
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe</label>
+                        <input v-model="password" type="password" class="form-control" required />
+                        <small class="text-muted d-block mt-1">
+                            Minimum 8 caractères
+                        </small>
+                    </div>
 
-                <!-- Error message -->
-                <p v-if="errorMessage" class="text-danger mb-3">
-                    {{ errorMessage }}
+                    <!-- Error message -->
+                    <p v-if="errorMessage" class="text-danger mb-3">
+                        {{ errorMessage }}
+                    </p>
+
+                    <!-- Submit -->
+                    <button class="btn btn-primary w-100" :disabled="loading">
+                        <span v-if="loading">Création du compte...</span>
+                        <span v-else>Créer le compte</span>
+                    </button>
+                </form>
+
+                <p class="text-center mt-3">
+                    Déjà inscrit ?
+                    <router-link to="/login">Se connecter</router-link>
                 </p>
-
-                <!-- Submit -->
-                <button class="btn btn-primary w-100" :disabled="loading">
-                    <span v-if="loading">Création du compte...</span>
-                    <span v-else>Créer le compte</span>
-                </button>
-            </form>
-
-            <p class="text-center mt-3">
-                Déjà inscrit ?
-                <router-link to="/login">Se connecter</router-link>
-            </p>
+            </div>
         </div>
     </div>
 </template>
@@ -121,4 +123,8 @@ async function submit() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.master {
+    flex: 1
+}
+</style>
