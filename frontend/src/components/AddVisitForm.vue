@@ -10,7 +10,7 @@
         <form @submit.prevent="submit">
             <!-- Autocomplete -->
             <div class="mb-2 position-relative">
-                <label class="form-label small fw-bold text-muted-travel mb-1">
+                <label class="form-label small fw-bold text-muted-travel mb-1" for="country">
                     Destination <span class="text-danger">*</span>
                 </label>
 
@@ -18,7 +18,7 @@
                     <span class="input-group-text border-0 pe-1">
                         <i class="bi bi-search"></i>
                     </span>
-                    <input v-model="countrySearch" type="text"
+                    <input id="country" v-model="countrySearch" type="text"
                         class="form-control border-0 shadow-none ps-1 text-body-travel" placeholder="Ex: Japon"
                         @focus="!isEditing && (showList = true)" @input="updateSearch" :disabled="isEditing" />
                 </div>
@@ -39,8 +39,8 @@
             </div>
             <!-- Date -->
             <div class="mb-3">
-                <label class="form-label small fw-bold text-muted-travel mb-1">Date d'arrivée</label>
-                <input v-model="date" type="date" class="form-control" />
+                <label class="form-label small fw-bold text-muted-travel mb-1" for="date">Date d'arrivée</label>
+                <input id="date" v-model="date" type="date" class="form-control" />
                 <!-- Errors if empty -->
                 <small v-if="errors.date" class="text-danger d-block mt-1 small">
                     <i class="bi bi-exclamation-circle me-1"></i>{{ errors.date }}
