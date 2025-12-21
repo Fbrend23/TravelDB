@@ -19,11 +19,11 @@
                         <!-- Username -->
                         <div class="mb-4">
                             <label class="form-label small fw-bold text-muted-travel text-uppercase"
-                                style="letter-spacing: 1px;">Identité (Nom d'utilisateur)</label>
+                                style="letter-spacing: 1px;" for="username">Identité (Nom d'utilisateur)</label>
                             <div class="input-group custom-input-group rounded-3 overflow-hidden">
                                 <span class="input-group-text border-0 pe-1 bg-transparent"><i
                                         class="bi bi-person-badge text-primary"></i></span>
-                                <input v-model="username" type="text"
+                                <input id="username" v-model="username" type="text"
                                     class="form-control border-0 shadow-none ps-2 text-body-travel fw-bold"
                                     placeholder="Voyageur" required />
                             </div>
@@ -36,11 +36,11 @@
                         <!-- Email -->
                         <div class="mb-4">
                             <label class="form-label small fw-bold text-muted-travel text-uppercase"
-                                style="letter-spacing: 1px;">Email de contact</label>
+                                style="letter-spacing: 1px;" for="email">Email de contact</label>
                             <div class="input-group custom-input-group rounded-3 overflow-hidden">
                                 <span class="input-group-text border-0 pe-1 bg-transparent"><i
                                         class="bi bi-envelope text-primary"></i></span>
-                                <input v-model="email" type="text"
+                                <input id="email" v-model="email" type="text"
                                     class="form-control border-0 shadow-none ps-2 text-body-travel fw-bold"
                                     placeholder="nom@voyage.com" required />
                             </div>
@@ -49,11 +49,11 @@
                         <!-- Password -->
                         <div class="mb-4">
                             <label class="form-label small fw-bold text-muted-travel text-uppercase"
-                                style="letter-spacing: 1px;">Code Secret</label>
+                                style="letter-spacing: 1px;" for="password">Code Secret</label>
                             <div class="input-group custom-input-group rounded-3 overflow-hidden">
                                 <span class="input-group-text border-0 pe-1 bg-transparent"><i
                                         class="bi bi-shield-lock text-primary"></i></span>
-                                <input v-model="password" type="password"
+                                <input id="password" v-model="password" type="password"
                                     class="form-control border-0 shadow-none ps-2 text-body-travel fw-bold"
                                     placeholder="••••••••" required />
                             </div>

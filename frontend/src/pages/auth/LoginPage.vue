@@ -19,11 +19,11 @@
                     <form @submit.prevent="submit">
                         <div class="mb-4">
                             <label class="form-label small fw-bold text-muted-travel text-uppercase"
-                                style="letter-spacing: 1px;">Email Passager</label>
+                                style="letter-spacing: 1px;" for="email">Email Passager</label>
                             <div class="input-group custom-input-group rounded-3 overflow-hidden">
                                 <span class="input-group-text border-0 pe-1 bg-transparent"><i
                                         class="bi bi-envelope text-primary"></i></span>
-                                <input v-model="email" type="text"
+                                <input id="email" v-model="email" type="text"
                                     class="form-control border-0 shadow-none ps-2 text-body-travel fw-bold"
                                     placeholder="nom@voyage.com" required />
                             </div>
@@ -32,12 +32,12 @@
                         <div class="mb-4">
                             <div class="d-flex justify-content-between">
                                 <label class="form-label small fw-bold text-muted-travel text-uppercase"
-                                    style="letter-spacing: 1px;">Code d'accès</label>
+                                    style="letter-spacing: 1px;" for="password">Code d'accès</label>
                             </div>
                             <div class="input-group custom-input-group rounded-3 overflow-hidden">
                                 <span class="input-group-text border-0 pe-1 bg-transparent"><i
                                         class="bi bi-key text-primary"></i></span>
-                                <input v-model="password" type="password"
+                                <input id="password" v-model="password" type="password"
                                     class="form-control border-0 shadow-none ps-2 text-body-travel fw-bold"
                                     placeholder="••••••••" required />
                             </div>
