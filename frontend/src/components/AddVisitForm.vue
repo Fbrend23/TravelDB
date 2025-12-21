@@ -1,61 +1,68 @@
 <template>
-    <div class="card shadow-sm">
-        <div class="card-body">
-
-            <h4 class="fw-bold mb-3">
-                {{ isEditing ? 'Modifier la visite' : 'Ajouter un pays visité' }}
-            </h4>
-
-            <form @submit.prevent="submit">
-
-                <!-- Autocomplete -->
-                <div class="mb-3 position-relative">
-                    <label class="form-label">Pays <span class="text-danger">*</span></label>
-
-                    <input v-model="countrySearch" type="text" class="form-control" placeholder="Ex: Suisse"
-                        @focus="!isEditing && (showList = true)" @input="updateSearch" :disabled="isEditing" />
-                    <!-- Error if empty -->
-                    <small v-if="errors.country" class="text-danger text-center d-block w-100">
-                        {{ errors.country }}
-                    </small>
-                    <!-- Dropdown -->
-                    <ul v-if="showList && filteredCountries.length > 0"
-                        class="list-group position-absolute w-100 mt-1 shadow-sm"
-                        style="max-height: 200px; overflow-y: auto; z-index: 10">
-                        <li v-for="c in filteredCountries" :key="c.code" class="list-group-item list-group-item-action"
-                            @click="selectCountry(c)">
-                            {{ c.name }}
-                        </li>
-                    </ul>
-                </div>
-                <!-- Date -->
-                <div class="mb-3">
-                    <label class="form-label">Date</label>
-                    <input v-model="date" type="date" class="form-control" />
-                    <!-- Errors if empty -->
-                    <small v-if="errors.date" class="text-danger text-center d-block w-100">
-                        {{ errors.date }}
-                    </small>
-                </div>
-                <!-- Success message -->
-                <p v-if="message" :class="messageClass" class="text-center d-block w-100">
-                    {{ message }}
-                </p>
-
-                <p class="text-muted small mb-2"> * obligatoire</p>
-
-                <div class="d-flex gap-2">
-                    <button v-if="isEditing" type="button" class="btn btn-outline-secondary w-50" @click="cancelEdit">
-                        Annuler
-                    </button>
-
-                    <button class="btn btn-primary" :class="isEditing ? 'w-50' : 'w-100'" :disabled="loading">
-                        <span v-if="loading">Chargement...</span>
-                        <span v-else>{{ isEditing ? 'Modifier' : 'Ajouter' }}</span>
-                    </button>
-                </div>
-            </form>
+    <div class="h-100">
+        <div class="mb-3 border-bottom border-travel pb-2">
+            <div class="font-handwritten text-primary fs-5 d-flex align-items-center">
+                <i class="bi bi-patch-check me-2"></i>
+                {{ isEditing ? 'Rectificatif Visa' : 'Nouveau Visa' }}
+            </div>
         </div>
+
+        <form @submit.prevent="submit">
+            <!-- Autocomplete -->
+            <div class="mb-2 position-relative">
+                <label class="form-label small fw-bold text-muted-travel mb-1" for="country">
+                    Destination <span class="text-danger">*</span>
+                </label>
+
+                <div class="input-group custom-input-group rounded-3 overflow-hidden">
+                    <span class="input-group-text border-0 pe-1">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input id="country" v-model="countrySearch" type="text"
+                        class="form-control border-0 shadow-none ps-1 text-body-travel" placeholder="Ex: Japon"
+                        @focus="!isEditing && (showList = true)" @input="updateSearch" :disabled="isEditing" />
+                </div>
+                <!-- Error if empty -->
+                <small v-if="errors.country" class="text-danger d-block mt-1 small">
+                    <i class="bi bi-exclamation-circle me-1"></i>{{ errors.country }}
+                </small>
+                <!-- Dropdown -->
+                <ul v-if="showList && filteredCountries.length > 0"
+                    class="list-group position-absolute w-100 mt-1 shadow border-0 rounded-3 overflow-hidden"
+                    style="max-height: 200px; overflow-y: auto; z-index: 100;">
+                    <li v-for="c in filteredCountries" :key="c.code"
+                        class="list-group-item list-group-item-action small border-0 border-bottom bg-paper text-body-travel"
+                        @click="selectCountry(c)">
+                        <span class="fi" :class="'fi-' + c.code.toLowerCase()"></span> {{ c.name }}
+                    </li>
+                </ul>
+            </div>
+            <!-- Date -->
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-muted-travel mb-1" for="date">Date d'arrivée</label>
+                <input id="date" v-model="date" type="date" class="form-control" />
+                <!-- Errors if empty -->
+                <small v-if="errors.date" class="text-danger d-block mt-1 small">
+                    <i class="bi bi-exclamation-circle me-1"></i>{{ errors.date }}
+                </small>
+            </div>
+            <!-- Success message -->
+            <p v-if="message" :class="messageClass" class="text-center d-block w-100 small fw-bold mb-2">
+                {{ message }}
+            </p>
+
+            <div class="d-flex gap-2 mt-3">
+                <button v-if="isEditing" type="button"
+                    class="btn btn-light btn-sm w-50 rounded-pill fw-bold text-muted-travel border" @click="cancelEdit">
+                    Annuler
+                </button>
+                <button class="btn btn-primary btn-sm rounded-pill fw-bold shadow-sm"
+                    :class="isEditing ? 'w-50' : 'w-100'" :disabled="loading">
+                    <span v-if="loading" class="spinner-border spinner-border-sm me-1"></span>
+                    <span v-else>{{ isEditing ? 'Mettre à jour' : 'Tamponner' }}</span>
+                </button>
+            </div>
+        </form>
     </div>
 </template>
 
