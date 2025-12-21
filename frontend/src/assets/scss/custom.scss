@@ -17,6 +17,7 @@ $border-radius: 1rem;
 // Premium Travel Design Variables
 :root {
   --travel-paper-bg: #f8fafc; // Slightly off-white (Slate-50)
+  --travel-paper-rgb: 248, 250, 252;
   --travel-surface-bg: #e2e8f0; // Darker surface (Slate-200)
   --travel-border-color: #cbd5e1; // Darker border
   --travel-text-color: #0f172a; // Darker text for contrast
@@ -27,6 +28,7 @@ $border-radius: 1rem;
   --travel-gradient-start: #cbd5e1; // Gray-blue start
   --travel-gradient-end: #e2e8f0; // Gray-blue end
   --travel-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+  --travel-map-tiles-filter: none;
 }
 
 [data-bs-theme='dark'] {
@@ -34,6 +36,7 @@ $border-radius: 1rem;
   --bs-body-color: #cbd5e1;
 
   --travel-paper-bg: #1e293b;
+  --travel-paper-rgb: 30, 41, 59;
   --travel-surface-bg: #0f172a;
   --travel-border-color: #334155;
   --travel-text-color: #e2e8f0;
@@ -44,6 +47,7 @@ $border-radius: 1rem;
   --travel-gradient-start: #0f172a;
   --travel-gradient-end: #1e293b;
   --travel-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+  --travel-map-tiles-filter: none;
 
   .form-control,
   .form-select,

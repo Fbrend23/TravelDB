@@ -12,7 +12,7 @@
             <div class="overlay"></div>
 
             <div class="content position-relative text-center p-5 rounded-4 shadow-lg text-body-travel animate-fade-in-up"
-                style="max-width: 700px; transform: rotate(-1deg); background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.6);">
+                style="max-width: 700px; transform: rotate(-1deg); background-color: rgba(var(--travel-paper-rgb), 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.6);">
                 <div class="visa position-absolute p-3 opacity-75 marker">
                     <div class="visa border border-4 rounded-circle d-flex align-items-center justify-content-center "
                         style="width: 80px; height: 80px; transform: rotate(15deg);">
@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <img src="/assets/logo/logo-light-mode.png" height="80" alt="TravelDB Logo" />
+                    <img :src="currentLogoSrc" height="80" alt="TravelDB Logo" />
                 </div>
 
                 <h1 class="fw-extrabold mb-2 display-4 text-primary text-uppercase" style="letter-spacing: -1px;">Votre
@@ -105,9 +105,23 @@ import Map from '@/components/MapComponent.vue';
 import AddVisitForm from '@/components/AddVisitForm.vue';
 import VisitList from "@/components/VisitList.vue"
 import { useVisitsStore, type Visit } from "@/stores/visits"
-import { ref, watch } from 'vue'
+import { useThemeStore } from '@/stores/theme'
+import { ref, watch, computed } from 'vue'
 
 const auth = useAuthStore()
+const themeStore = useThemeStore()
+const logoPathLight = '/assets/logo/logo-light-mode.png';
+const logoPathDark = '/assets/logo/logo-dark-mode.png';
+
+const currentLogoSrc = computed(() => {
+    // dark theme
+    if (themeStore.currentTheme === 'dark') {
+        return logoPathDark;
+    }
+    // light theme
+    return logoPathLight;
+});
+
 const currentCountryName = ref<string>('')
 const currentCountryISO3 = ref<string>('')
 const currentVisits = ref<Visit[]>([])

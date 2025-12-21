@@ -27,7 +27,8 @@
                                     class="form-control border-0 shadow-none ps-2 text-body-travel fw-bold"
                                     placeholder="Voyageur" required />
                             </div>
-                            <small class="text-muted-travel opacity-75 d-block mt-1 small ms-1" style="font-size: 0.75rem;">
+                            <small class="text-muted-travel opacity-75 d-block mt-1 small ms-1"
+                                style="font-size: 0.75rem;">
                                 Entre 3 et 32 caractères
                             </small>
                         </div>
@@ -56,7 +57,8 @@
                                     class="form-control border-0 shadow-none ps-2 text-body-travel fw-bold"
                                     placeholder="••••••••" required />
                             </div>
-                            <small class="text-muted-travel opacity-75 d-block mt-1 small ms-1" style="font-size: 0.75rem;">
+                            <small class="text-muted-travel opacity-75 d-block mt-1 small ms-1"
+                                style="font-size: 0.75rem;">
                                 Minimum 8 caractères
                             </small>
                         </div>
@@ -81,7 +83,8 @@
                     <div class="text-center mt-4">
                         <span class="text-muted-travel small">Déjà un passeport ?</span>
                         <router-link to="/login"
-                            class="fw-bold text-primary text-decoration-none ms-2 font-handwritten fs-5">Accéder à l'embarquement</router-link>
+                            class="fw-bold text-primary text-decoration-none ms-2 font-handwritten fs-5">Accéder à
+                            l'embarquement</router-link>
                     </div>
                 </div>
 
@@ -89,16 +92,18 @@
                 <div class="col-lg-4 d-none d-lg-flex flex-column ticket-stub shadow-travel">
                     <div class="p-4 h-100 d-flex flex-column justify-content-between text-center">
                         <div class="opacity-50">
-                            <img src="/assets/logo/logo-light-mode.png" height="50" class="mb-2 grayscale" alt="Logo" />
+                            <img :src="currentLogoSrc" height="50" class="mb-2 grayscale" alt="Logo" />
                         </div>
 
                         <div class="my-auto w-100 position-relative">
-                            <div class="border border-2 border-primary rounded-circle d-inline-flex align-items-center justify-content-center p-3 opacity-25" style="width: 150px; height: 150px; transform: rotate(-15deg);">
-                                <div class="text-uppercase fw-bold text-primary text-center" style="letter-spacing: 2px; font-size: 0.8rem;">
+                            <div class="border border-2 border-primary rounded-circle d-inline-flex align-items-center justify-content-center p-3 opacity-25"
+                                style="width: 150px; height: 150px; transform: rotate(-15deg);">
+                                <div class="text-uppercase fw-bold text-primary text-center"
+                                    style="letter-spacing: 2px; font-size: 0.8rem;">
                                     Visa<br>Authorized<br>TravelDB
                                 </div>
                             </div>
-                             <div class="text-center font-monospace small mt-4 text-muted-travel text-uppercase"
+                            <div class="text-center font-monospace small mt-4 text-muted-travel text-uppercase"
                                 style="font-size: 0.6rem; letter-spacing: 3px;">Document Officiel</div>
                         </div>
 
@@ -119,10 +124,24 @@
 import { computed, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import { useThemeStore } from '@/stores/theme'
 import type { AxiosError } from 'axios'
 
 const auth = useAuthStore()
+const themeStore = useThemeStore()
 const router = useRouter()
+
+const logoPathLight = '/assets/logo/logo-light-mode.png';
+const logoPathDark = '/assets/logo/logo-dark-mode.png';
+
+const currentLogoSrc = computed(() => {
+    // dark theme
+    if (themeStore.currentTheme === 'dark') {
+        return logoPathDark;
+    }
+    // light theme
+    return logoPathLight;
+});
 
 //forms data
 const username = ref('')

@@ -12,7 +12,8 @@
                             <h2 class="fw-extrabold text-primary mb-0 text-uppercase" style="letter-spacing: -1px;">
                                 Connexion</h2>
                         </div>
-                        <i class="bi bi-airplane-engines text-accent opacity-50 animate-float" style="font-size: 3rem;"></i>
+                        <i class="bi bi-airplane-engines text-accent opacity-50 animate-float"
+                            style="font-size: 3rem;"></i>
                     </div>
 
                     <form @submit.prevent="submit">
@@ -33,7 +34,8 @@
                                 <label class="form-label small fw-bold text-muted-travel text-uppercase"
                                     style="letter-spacing: 1px;">Code d'accès</label>
                                 <router-link to="/forgot-password"
-                                    class="text-decoration-none small font-handwritten fw-bold text-accent">Oublié ?</router-link>
+                                    class="text-decoration-none small font-handwritten fw-bold text-accent">Oublié
+                                    ?</router-link>
                             </div>
                             <div class="input-group custom-input-group rounded-3 overflow-hidden">
                                 <span class="input-group-text border-0 pe-1 bg-transparent"><i
@@ -86,7 +88,7 @@
 
                     <div class="p-4 h-100 d-flex flex-column justify-content-between text-center">
                         <div class="opacity-50">
-                            <img src="/assets/logo/logo-light-mode.png" height="50" class="mb-2 grayscale" alt="Logo" />
+                            <img :src="currentLogoSrc" height="50" class="mb-2 grayscale" alt="Logo" />
                         </div>
 
                         <div class="my-auto w-100">
@@ -128,14 +130,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter, useRoute } from 'vue-router'
+import { useThemeStore } from '@/stores/theme'
 import type { AxiosError } from 'axios'
 
 const auth = useAuthStore()
+const themeStore = useThemeStore()
 const router = useRouter()
 const route = useRoute()
+
+const logoPathLight = '/assets/logo/logo-light-mode.png';
+const logoPathDark = '/assets/logo/logo-dark-mode.png';
+
+const currentLogoSrc = computed(() => {
+    // dark theme
+    if (themeStore.currentTheme === 'dark') {
+        return logoPathDark;
+    }
+    // light theme
+    return logoPathLight;
+});
 
 const email = ref('')
 const password = ref('')
