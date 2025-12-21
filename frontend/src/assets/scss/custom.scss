@@ -16,17 +16,17 @@ $border-radius: 1rem;
 
 // Premium Travel Design Variables
 :root {
-  --travel-paper-bg: #ffffff;
-  --travel-surface-bg: #f8f9fa;
-  --travel-border-color: #e2e8f0;
-  --travel-text-color: #1e293b;
-  --travel-muted-color: #64748b;
-  --travel-dashed-color: #cbd5e1;
-  --travel-input-bg: #f1f5f9;
-  --travel-accent: #0ea5e9; // Sky blue
-  --travel-gradient-start: #e0f2fe;
-  --travel-gradient-end: #f0f9ff;
-  --travel-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+  --travel-paper-bg: #f8fafc; // Slightly off-white (Slate-50)
+  --travel-surface-bg: #e2e8f0; // Darker surface (Slate-200)
+  --travel-border-color: #cbd5e1; // Darker border
+  --travel-text-color: #0f172a; // Darker text for contrast
+  --travel-muted-color: #475569;
+  --travel-dashed-color: #94a3b8;
+  --travel-input-bg: #e2e8f0;
+  --travel-accent: #0284c7; // Slightly darker blue
+  --travel-gradient-start: #cbd5e1; // Gray-blue start
+  --travel-gradient-end: #e2e8f0; // Gray-blue end
+  --travel-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
 }
 
 [data-bs-theme='dark'] {
