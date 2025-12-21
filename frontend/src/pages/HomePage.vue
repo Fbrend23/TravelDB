@@ -8,7 +8,7 @@
                 Votre navigateur ne supporte pas la vidéo.
             </video>
             <div class="overlay"></div>
-            <div class="content position-relative text-center p-5 rounded-4 shadow-lg bg-paper text-body-travel"
+            <div class="content position-relative text-center p-5 rounded-4 shadow-lg bg-paper text-body-travel animate-fade-in-up"
                 style="max-width: 700px; transform: rotate(-1deg);">
                 <div class="visa position-absolute p-3 opacity-75 marker">
                     <div class="visa border border-4 rounded-circle d-flex align-items-center justify-content-center "
@@ -36,30 +36,32 @@
             </div>
         </div>
         <!-- user connected-->
-        <div v-else class="h-100 d-flex flex-column" style="background-color: var(--bs-body-bg); overflow: hidden;">
+        <div v-else class="h-100 d-flex flex-column bg-gradient-travel" style="overflow: hidden;">
             <div class="container-fluid py-3 h-100 d-flex flex-column" style="overflow: hidden;">
 
-                <div class="row g-0 flex-grow-1 shadow-lg rounded-4 overflow-hidden border border-travel border-4 mx-md-3 mb-md-3 mt-1"
+                <div class="row g-0 flex-grow-1 mx-md-3 mb-md-3 mt-1 login-card-container animate-fade-in-up"
                     style="min-height: 0;">
-                    <!-- Left Column -->
-                    <div class="col-md-9 col-lg-9 d-flex bg-paper position-relative p-2">
-                        <div class="w-100 h-100 position-relative z-1 p-2">
-                            <Map @show-visits="setSelectedVisits" />
+                    <!-- Left Column (Map) - Styled as the 'Main Ticket' Section -->
+                    <div class="col-md-9 col-lg-9 d-flex ticket-main shadow-travel position-relative p-2" style="border-right: 2px dashed var(--travel-dashed-color);">
+                        <div class="w-100 h-100 position-relative z-1 rounded-4 overflow-hidden shadow-sm border border-travel">
+                             <Map @show-visits="setSelectedVisits" />
                         </div>
                     </div>
-                    <!-- right column -->
-                    <div class="col-md-3 col-lg-3 d-flex flex-column h-100 boarding-pass py-2 overflow-hidden">
+                    <!-- Right Column (Sidebar) - Styled as 'Ticket Stub' -->
+                    <div class="col-md-3 col-lg-3 d-flex flex-column h-100 ticket-stub shadow-travel py-2 overflow-hidden">
                         <!-- form -->
                         <div class="p-3 pb-0 text-center flex-shrink-0">
-                            <h5 class="text-uppercase text-muted fw-bold small mb-1" style="letter-spacing: 2px;">
+                            <h5 class="text-uppercase text-muted-travel fw-bold small mb-1" style="letter-spacing: 2px;">
                                 Boarding Pass
                             </h5>
-                            <div class="font-handwritten text-primary fs-3 lh-1">Mes Escales</div>
-                            <hr class="border-secondary opacity-25 mx-4 mt-2 mb-0">
+                            <div class="font-handwritten text-accent fs-3 lh-1">Mes Escales</div>
+                             <div class="d-flex justify-content-center mt-2 opacity-50">
+                                <i class="bi bi-airplane text-secondary" style="transform: rotate(45deg);"></i>
+                            </div>
                         </div>
 
                         <div class="flex-shrink-0 pt-2 px-3 pb-2">
-                            <div class="bg-paper p-3 rounded-3 border">
+                            <div class="bg-paper p-3 rounded-3 border border-travel shadow-sm">
                                 <AddVisitForm :visitToEdit="visitToEdit" @cancel-edit="cancelEdit"
                                     @success="onFormSuccess" />
                             </div>
@@ -67,10 +69,15 @@
 
                         <!-- country list-->
                         <div class="flex-grow-1 d-flex flex-column px-3 pb-3 " style="min-height: 0; overflow: hidden;">
-                            <VisitList class="h-100" :country="currentCountryName" :visits="currentVisits"
-                                @edit="setVisitToEdit" />
+                             <div class="h-100 bg-paper rounded-3 border border-travel shadow-sm overflow-hidden p-2">
+                                <VisitList class="h-100" :country="currentCountryName" :visits="currentVisits"
+                                    @edit="setVisitToEdit" />
+                            </div>
                         </div>
-
+                        
+                         <div class="px-3 pb-2 text-center opacity-50">
+                            <small class="font-monospace text-uppercase text-muted-travel" style="font-size: 0.6rem; letter-spacing: 2px;">TravelDB Official Record</small>
+                        </div>
                     </div>
                 </div>
             </div>
