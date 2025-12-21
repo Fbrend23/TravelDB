@@ -1,9 +1,11 @@
 <template>
     <div class="h-100">
-        <h6 class="fw-bold mb-3 text-uppercase text-primary small" style="letter-spacing: 1px;">
-            <i class="bi bi-pin-map-fill me-1"></i>
-            {{ isEditing ? 'Modifier le tampon' : 'Nouveau Tampon' }}
-        </h6>
+        <div class="mb-3 border-bottom border-travel pb-2">
+            <div class="font-handwritten text-primary fs-5 d-flex align-items-center">
+                <i class="bi bi-patch-check me-2"></i>
+                {{ isEditing ? 'Rectificatif Visa' : 'Nouveau Visa' }}
+            </div>
+        </div>
 
         <form @submit.prevent="submit">
             <!-- Autocomplete -->

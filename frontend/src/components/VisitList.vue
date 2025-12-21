@@ -2,8 +2,11 @@
   <div class="d-flex flex-column h-100 w-100 rounded-3 bg-paper shadow-inset border border-travel overflow-hidden">
 
     <!-- fixed header -->
-    <div class="p-3 border-bottom border-travel fw-bold fs-5 text-primary font-handwritten bg-paper flex-shrink-0">
-      {{ country || 'Destination' }}
+    <div class="p-3 border-bottom border-travel bg-paper flex-shrink-0">
+      <div class="font-handwritten text-primary fs-5 d-flex align-items-center">
+        <i class="bi bi-geo-alt me-2"></i>
+        {{ country || 'Destination' }}
+      </div>
     </div>
     <!-- no country selected -->
 
