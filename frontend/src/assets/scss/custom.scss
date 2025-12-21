@@ -1,120 +1,238 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800&family=Caveat:wght@600;700&display=swap');
 
-$font-family-sans-serif: 'Inter', system-ui, -apple-system, sans-serif;
+$font-family-sans-serif:
+  'Inter',
+  system-ui,
+  -apple-system,
+  sans-serif;
 $headings-font-family: 'Montserrat', sans-serif;
 
 $primary: #0077b6;
 $secondary: #f4a261;
 $border-radius: 1rem;
 
-@import "bootstrap/scss/bootstrap";
-@import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
+@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 
+// Premium Travel Design Variables
 :root {
-    --travel-paper-bg: #ffffff;
-    --travel-surface-bg: #f8f9fa;
-    --travel-border-color: #e2e8f0;
-    --travel-text-color: #212529;
-    --travel-muted-color: #6c757d;
-    --travel-dashed-color: #cbd5e1;
-    --travel-input-bg: #f8f9fa;
+  --travel-paper-bg: #ffffff;
+  --travel-surface-bg: #f8f9fa;
+  --travel-border-color: #e2e8f0;
+  --travel-text-color: #1e293b;
+  --travel-muted-color: #64748b;
+  --travel-dashed-color: #cbd5e1;
+  --travel-input-bg: #f1f5f9;
+  --travel-accent: #0ea5e9; // Sky blue
+  --travel-gradient-start: #e0f2fe;
+  --travel-gradient-end: #f0f9ff;
+  --travel-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
 }
 
-[data-bs-theme="dark"] {
-    --bs-body-bg: #0f172a;          
-    --bs-body-color: #cbd5e1;        
-    
-    --travel-paper-bg: #1e293b;      
-    --travel-surface-bg: #0f172a;    
-    --travel-border-color: #334155;  
-    --travel-text-color: #e2e8f0;    
-    --travel-muted-color: #94a3b8;   
-    --travel-dashed-color: #475569;  
-    --travel-input-bg: #334155;     
+[data-bs-theme='dark'] {
+  --bs-body-bg: #0f172a;
+  --bs-body-color: #cbd5e1;
 
+  --travel-paper-bg: #1e293b;
+  --travel-surface-bg: #0f172a;
+  --travel-border-color: #334155;
+  --travel-text-color: #e2e8f0;
+  --travel-muted-color: #94a3b8;
+  --travel-dashed-color: #475569;
+  --travel-input-bg: #334155;
+  --travel-accent: #38bdf8;
+  --travel-gradient-start: #0f172a;
+  --travel-gradient-end: #1e293b;
+  --travel-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
 
-    .form-control, .form-select, .input-group-text {
-        background-color: var(--travel-input-bg);
-        border-color: var(--travel-border-color);
-        color: var(--travel-text-color);
-    }
-    .form-control:focus {
-        background-color: var(--travel-input-bg); 
-        color: var(--travel-text-color);
-    }
-    .btn-light {
-        background-color: #334155;
-        border-color: #475569;
-        color: #fff;
-    }
+  .form-control,
+  .form-select,
+  .input-group-text {
+    background-color: var(--travel-input-bg);
+    border-color: var(--travel-border-color);
+    color: var(--travel-text-color);
+  }
+  .form-control:focus {
+    background-color: var(--travel-input-bg);
+    color: var(--travel-text-color);
+  }
+  .btn-light {
+    background-color: #334155;
+    border-color: #475569;
+    color: #fff;
+  }
 
-    .font-handwritten { font-family: 'Caveat', cursive; }
-    .bg-paper { background-color: var(--travel-paper-bg) !important; transition: background-color 0.3s ease; }
-    .bg-surface { background-color: var(--travel-surface-bg) !important; transition: background-color 0.3s ease; }
-    .border-travel { border-color: var(--travel-border-color) !important; }
-    .boarding-pass { background-color: var(--travel-surface-bg); border-left: 2px dashed var(--travel-dashed-color); transition: all 0.3s ease; }
-    .text-body-travel { color: var(--travel-text-color) !important; }
-    .text-muted-travel { color: var(--travel-muted-color) !important; }
-    .custom-input-group { border: 1px solid var(--travel-border-color); background-color: var(--travel-input-bg); }
-    .custom-input-group input, .custom-input-group .input-group-text { background-color: transparent !important; color: var(--travel-text-color) !important; }
-    .custom-input-group:focus-within { border-color: #86b7fe; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
-
-
-    .leaflet-layer,
-    .leaflet-control-zoom-in,
-    .leaflet-control-zoom-out,
-    .leaflet-control-attribution {
-        filter: var(--travel-map-tiles-filter);
-        transition: filter 0.3s ease;
-    }
-}
-
-.font-handwritten {
+  .font-handwritten {
     font-family: 'Caveat', cursive;
-}
-
-
-.bg-paper {
-    background-color: var(--travel-paper-bg) !important;
-    transition: background-color 0.3s ease;
-}
-
-
-.bg-surface {
-    background-color: var(--travel-surface-bg) !important;
-    transition: background-color 0.3s ease;
-}
-
-
-.border-travel {
-    border-color: var(--travel-border-color) !important;
-}
-
-
-.boarding-pass {
+  }
+  .boarding-pass {
     background-color: var(--travel-surface-bg);
     border-left: 2px dashed var(--travel-dashed-color);
     transition: all 0.3s ease;
+  }
+
+  .leaflet-layer,
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out,
+  .leaflet-control-attribution {
+    filter: var(--travel-map-tiles-filter);
+    transition: filter 0.3s ease;
+  }
 }
 
+// Global Styles
+body {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
 
-.text-body-travel { color: var(--travel-text-color) !important; }
-.text-muted-travel { color: var(--travel-muted-color) !important; }
+.font-handwritten {
+  font-family: 'Caveat', cursive;
+}
+
+// Design Utilities
+.bg-gradient-travel {
+  background: radial-gradient(
+    circle at top left,
+    var(--travel-gradient-start),
+    var(--travel-gradient-end)
+  );
+}
+
+.text-accent {
+  color: var(--travel-accent) !important;
+}
+
+.bg-paper {
+  background-color: var(--travel-paper-bg) !important;
+  transition: background-color 0.3s ease;
+}
+
+.bg-surface {
+  background-color: var(--travel-surface-bg) !important;
+  transition: background-color 0.3s ease;
+}
+
+.border-travel {
+  border-color: var(--travel-border-color) !important;
+}
+
+.shadow-travel {
+  box-shadow: var(--travel-shadow) !important;
+}
+
+// Boarding Pass & Notch Layout
+.ticket-main {
+  background:
+    radial-gradient(circle at right top, transparent 10px, var(--travel-paper-bg) 11px),
+    radial-gradient(circle at right bottom, transparent 10px, var(--travel-paper-bg) 11px);
+  background-size: 51% 51%;
+  background-position:
+    top right,
+    bottom right;
+  background-repeat: no-repeat;
+  background-color: var(--travel-paper-bg);
+
+  // Left corner radius
+  border-top-left-radius: var(--bs-border-radius-xl);
+  border-bottom-left-radius: var(--bs-border-radius-xl);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+
+  transition: background-color 0.3s ease;
+}
+
+.ticket-stub {
+  background:
+    radial-gradient(circle at left top, transparent 10px, var(--travel-surface-bg) 11px),
+    radial-gradient(circle at left bottom, transparent 10px, var(--travel-surface-bg) 11px);
+  background-size: 51% 51%;
+  background-position:
+    top left,
+    bottom left;
+  background-repeat: no-repeat;
+  background-color: var(--travel-surface-bg);
+
+  // Divider
+  border-left: 2px dashed var(--travel-dashed-color);
+
+  // Right corner radius
+  border-top-right-radius: var(--bs-border-radius-xl);
+  border-bottom-right-radius: var(--bs-border-radius-xl);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+// Wrapper for the specific login card
+.login-card-container {
+  border-radius: var(--bs-border-radius-xl);
+  // Ensure the container itself doesn't have a background that blocks the transparent notches.
+  // The notches are "transparent" so they show whatever is BEHIND .login-card-container.
+  // If .login-card-container has a shadow, it might look weird at the notches if we don't handle it.
+  // We can put the shadow on the *children* or use a drop-shadow filter on the parent.
+  filter: drop-shadow(var(--travel-shadow));
+  background: transparent;
+}
+
+.text-body-travel {
+  color: var(--travel-text-color) !important;
+}
+.text-muted-travel {
+  color: var(--travel-muted-color) !important;
+}
 
 .custom-input-group {
-    border: 1px solid var(--travel-border-color);
-    background-color: var(--travel-input-bg);
+  border: 1px solid var(--travel-border-color);
+  background-color: var(--travel-input-bg);
+  transition: all 0.2s ease;
 }
-.custom-input-group input, 
+.custom-input-group input,
 .custom-input-group .input-group-text {
-    background-color: transparent !important;
-    color: var(--travel-text-color) !important;
+  background-color: transparent !important;
+  color: var(--travel-text-color) !important;
 }
 .custom-input-group:focus-within {
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: var(--travel-accent);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15); // Sky blue glow
+  transform: translateY(-1px);
 }
 
-.master{
-    flex: 1
+.master {
+  flex: 1;
+}
+
+// Animations
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

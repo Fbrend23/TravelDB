@@ -1,10 +1,10 @@
 <template>
-    <div class="container-fluid bg-surface d-flex justify-content-center align-items-center master">
+    <div class="container-fluid bg-gradient-travel d-flex justify-content-center align-items-center master">
 
-        <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-paper" style="max-width: 1080px; width: 100%;">
+        <div class="login-card-container animate-fade-in-up" style="max-width: 1080px; width: 100%;">
             <div class="row g-0">
 
-                <div class="col-lg-8 p-4 p-md-5">
+                <div class="col-lg-8 p-4 p-md-5 ticket-main shadow-travel">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
                             <h5 class="text-uppercase text-muted-travel fw-bold small mb-1"
@@ -12,7 +12,7 @@
                             <h2 class="fw-extrabold text-primary mb-0 text-uppercase" style="letter-spacing: -1px;">
                                 Connexion</h2>
                         </div>
-                        <i class="bi bi-airplane-engines text-primary opacity-25" style="font-size: 2.5rem;"></i>
+                        <i class="bi bi-airplane-engines text-accent opacity-50 animate-float" style="font-size: 3rem;"></i>
                     </div>
 
                     <form @submit.prevent="submit">
@@ -33,7 +33,7 @@
                                 <label class="form-label small fw-bold text-muted-travel text-uppercase"
                                     style="letter-spacing: 1px;">Code d'accès</label>
                                 <router-link to="/forgot-password"
-                                    class="text-decoration-none small font-handwritten fw-bold">Oublié ?</router-link>
+                                    class="text-decoration-none small font-handwritten fw-bold text-accent">Oublié ?</router-link>
                             </div>
                             <div class="input-group custom-input-group rounded-3 overflow-hidden">
                                 <span class="input-group-text border-0 pe-1 bg-transparent"><i
@@ -82,7 +82,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 d-none d-lg-flex flex-column bg-surface boarding-pass position-relative">
+                <div class="col-lg-4 d-none d-lg-flex flex-column ticket-stub shadow-travel">
 
                     <div class="p-4 h-100 d-flex flex-column justify-content-between text-center">
                         <div class="opacity-50">
