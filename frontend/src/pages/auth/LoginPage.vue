@@ -33,9 +33,6 @@
                             <div class="d-flex justify-content-between">
                                 <label class="form-label small fw-bold text-muted-travel text-uppercase"
                                     style="letter-spacing: 1px;">Code d'accès</label>
-                                <router-link to="/forgot-password"
-                                    class="text-decoration-none small font-handwritten fw-bold text-accent">Oublié
-                                    ?</router-link>
                             </div>
                             <div class="input-group custom-input-group rounded-3 overflow-hidden">
                                 <span class="input-group-text border-0 pe-1 bg-transparent"><i
@@ -43,6 +40,11 @@
                                 <input v-model="password" type="password"
                                     class="form-control border-0 shadow-none ps-2 text-body-travel fw-bold"
                                     placeholder="••••••••" required />
+                            </div>
+                            <div class="text-end mt-1">
+                                <router-link to="/forgot-password"
+                                    class="text-decoration-none small font-handwritten fw-bold text-accent">Oublié
+                                    ?</router-link>
                             </div>
                         </div>
 
