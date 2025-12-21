@@ -2,7 +2,7 @@
     <div class="container-fluid p-0 h-100 d-flex flex-column">
         <!-- guest page -->
         <div v-if="!auth.isLoggedIn"
-            class="hero-section h-100 position-relative d-flex align-items-center justify-content-center text-white">
+            class="hero-section h-100 position-relative d-flex align-items-center justify-content-center text-body-travel">
             <video autoplay muted loop playsinline class="bg-video">
                 <source src="/assets/travel.mp4" type="video/mp4">
                 Votre navigateur ne supporte pas la vidéo.
