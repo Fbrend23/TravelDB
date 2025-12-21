@@ -34,7 +34,7 @@
                 <div class="d-flex justify-content-center gap-3 mt-4">
                     <RouterLink to="/login"
                         class="btn btn-outline-primary btn-lg px-4 rounded-pill font-handwritten fw-bold fs-4 border-2">
-                        Connexion
+                        Se connecter
                     </RouterLink>
                     <RouterLink to="/register"
                         class="btn btn-primary btn-lg px-5 rounded-pill fw-bold d-flex align-items-center gap-2 font-handwritten shadow-travel text-uppercase"
