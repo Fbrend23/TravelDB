@@ -9,7 +9,6 @@ jobs:
   build-and-deploy-frontend:
     runs-on: ubuntu-latest
     permissions:
-       id-token: write
        contents: read
     steps:
       - name: Checkout code
