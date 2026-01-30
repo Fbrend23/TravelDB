@@ -65,4 +65,4 @@ jobs:
           output_location: "dist" 
         env:
           # Injection de l'URL de l'API pour que Vue.js puisse communiquer avec le backend
-          VITE_API_URL: "${{ secrets.API_URL }}"
+          VITE_API_URL: "${{ secrets.API_URL_AZURE }}"
