@@ -1,6 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
+# Documentation : https://github.com/Azure/webapps-deploy
 name: Build and deploy Node.js app to Azure Web App - brefle-traveldb
 
 on:
@@ -13,27 +11,39 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v6
 
       - name: Set up Node.js version
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
-          node-version: '22.x'
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: './backend/package-lock.json'
 
-      - name: npm install, build, and test
+      - name: Build Backend (AdonisJS)
+        # On se place dans le dossier backend comme spécifié dans deploy.yml
+        working-directory: ./backend 
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm ci
+          # Installation du compilateur SWC nécessaire pour le build AdonisJS sur Linux
+          npm install @swc/core-linux-x64-gnu --no-save
+          npm run build
+
+      - name: Prepare Production Artifact
+        # Azure a besoin du package.json à la racine de l'artéfact pour identifier le point d'entrée
+        run: |
+          cp backend/package.json backend/build/
+          cp backend/package-lock.json backend/build/
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: backend/build/
 
   deploy:
     runs-on: ubuntu-latest
