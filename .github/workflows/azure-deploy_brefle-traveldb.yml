@@ -22,22 +22,23 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: './backend/package-lock.json'
+          # CORRECTION : Le lockfile est à la racine, pas dans /backend
+          cache-dependency-path: './package-lock.json' 
 
       - name: Build Backend (AdonisJS)
-        # On se place dans le dossier backend comme spécifié dans deploy.yml
+        # On utilise le répertoire backend pour le build spécifique
         working-directory: ./backend 
         run: |
           npm ci
-          # Installation du compilateur SWC nécessaire pour le build AdonisJS sur Linux
+          # Installation du binaire SWC pour Linux (requis pour AdonisJS build)
           npm install @swc/core-linux-x64-gnu --no-save
           npm run build
 
       - name: Prepare Production Artifact
-        # Azure a besoin du package.json à la racine de l'artéfact pour identifier le point d'entrée
+        # Azure a besoin de package.json dans l'artéfact pour démarrer l'app
         run: |
           cp backend/package.json backend/build/
-          cp backend/package-lock.json backend/build/
+          cp package-lock.json backend/build/
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
